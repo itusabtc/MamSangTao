@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { LogIn, Sparkles, Star } from 'lucide-react'
+import { LogIn, Star } from 'lucide-react'
+import { BrandLogo } from '@/components/brand-logo'
 import { SiteSearch } from '@/components/site-search'
 import { ThemeToggle } from '@/components/theme-toggle'
 
@@ -12,10 +13,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-hairline bg-cream/90 backdrop-blur-sm">
       <div className="wrap flex h-[86px] items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2" aria-label="Mầm Sáng Tạo — về trang chủ">
-          <Sparkles aria-hidden className="h-6 w-6 text-coral" strokeWidth={2.5} />
-          <span className="font-display text-xl font-bold text-blue">Mầm Sáng Tạo</span>
-        </Link>
+        <BrandLogo size={44} />
 
         <nav
           aria-label="Điều hướng chính"

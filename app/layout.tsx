@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Nunito, Quicksand } from 'next/font/google'
+import { ScrollToTop } from '@/components/scroll-to-top'
 import './globals.css'
 
 const nunito = Nunito({
@@ -22,11 +23,21 @@ export const metadata: Metadata = {
   description:
     'Nơi trẻ vẽ tranh, kể chuyện và làm quen với lập trình — bằng trí tưởng tượng của chính mình. Không quảng cáo, không mạng xã hội.',
   generator: 'v0.app',
+  openGraph: {
+    title: 'Mầm Sáng Tạo — Xưởng sáng tạo an toàn cho trẻ 6–12 tuổi',
+    description:
+      'Nơi trẻ vẽ tranh, kể chuyện và làm quen với lập trình — bằng trí tưởng tượng của chính mình.',
+    type: 'website',
+    locale: 'vi_VN',
+    images: [{ url: '/brand/banner.png', width: 1024, height: 1024, alt: 'Mầm Sáng Tạo' }],
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#fbf7ef',
-  colorScheme: 'light',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fbf7ef' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f1521' },
+  ],
 }
 
 export default function RootLayout({
@@ -49,6 +60,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased font-body">
         {children}
+        <ScrollToTop />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

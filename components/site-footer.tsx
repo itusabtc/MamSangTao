@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Sparkles } from 'lucide-react'
+import { BrandLogo } from '@/components/brand-logo'
 
 const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
   {
@@ -14,6 +14,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     heading: 'Công ty',
     links: [
       { label: 'Giới thiệu', href: '/gioi-thieu' },
+      { label: 'Thương hiệu', href: '/thuong-hieu' },
       { label: 'Liên hệ', href: '/lien-he' },
       { label: 'Đăng nhập', href: '/dang-nhap' },
     ],
@@ -32,10 +33,7 @@ export function SiteFooter() {
     <footer className="border-t border-hairline bg-cream">
       <div className="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div className="max-w-sm">
-          <Link href="/" className="flex items-center gap-2">
-            <Sparkles aria-hidden className="h-6 w-6 text-coral" strokeWidth={2.5} />
-            <span className="font-display text-xl font-bold text-blue">Mầm Sáng Tạo</span>
-          </Link>
+          <BrandLogo size={44} />
           <p className="mt-3 text-pretty text-ink/70">
             Nuôi dưỡng trí tưởng tượng, từng ý tưởng một.
           </p>
