@@ -1,5 +1,7 @@
 import Link from 'next/link'
-import { Sparkles } from 'lucide-react'
+import { LogIn, Sparkles, Star } from 'lucide-react'
+import { SiteSearch } from '@/components/site-search'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 type SiteHeaderProps = {
   /** 'home' shows homepage anchor nav; 'page' shows cross-page links for inner pages. */
@@ -41,15 +43,19 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Link
-            href="/dang-nhap"
-            className="hidden text-sm font-bold text-ink/80 hover:text-blue sm:inline"
+            href="/danh-gia"
+            className="hidden items-center gap-1.5 rounded-full px-2.5 py-2 text-sm font-bold text-ink/80 transition-colors hover:text-blue sm:inline-flex"
           >
-            Đăng nhập
+            <Star className="h-[18px] w-[18px] fill-yellow text-yellow" />
+            Đánh giá
           </Link>
-          <Link href="/dang-ky" className="btn btn-primary">
-            Đăng ký
+          <SiteSearch />
+          <ThemeToggle />
+          <Link href="/dang-nhap" className="btn btn-primary ml-1">
+            <LogIn className="h-[18px] w-[18px]" />
+            Đăng nhập
           </Link>
         </div>
       </div>

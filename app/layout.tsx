@@ -38,7 +38,15 @@ export default function RootLayout({
     <html
       lang="vi"
       className={`${nunito.variable} ${quicksand.variable} bg-cream`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="antialiased font-body">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

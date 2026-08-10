@@ -7,7 +7,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     links: [
       { label: 'Công cụ', href: '/#cong-cu' },
       { label: 'Cách hoạt động', href: '/#cach-hoat-dong' },
-      { label: 'Cho phụ huynh', href: '/#phu-huynh' },
+      { label: 'Đánh giá', href: '/danh-gia' },
     ],
   },
   {
@@ -15,7 +15,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     links: [
       { label: 'Giới thiệu', href: '/gioi-thieu' },
       { label: 'Liên hệ', href: '/lien-he' },
-      { label: 'Đăng ký', href: '/dang-ky' },
+      { label: 'Đăng nhập', href: '/dang-nhap' },
     ],
   },
   {

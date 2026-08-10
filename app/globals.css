@@ -13,6 +13,7 @@
   --color-yellow: var(--yellow);
   --color-violet: var(--violet);
   --color-hairline: var(--hairline);
+  --color-surface: var(--surface);
 
   --color-background: var(--cream);
   --color-foreground: var(--ink);
@@ -34,6 +35,34 @@
   --yellow: #f5c34d;
   --violet: #8a73c9;
   --hairline: #ddd5c8;
+  --surface: #ffffff;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --ink: #e8eef8;
+  --blue: #6f97e0;
+  --blue-dark: #34508f;
+  --cream: #0f1521;
+  --coral: #f68d73;
+  --green: #7cc199;
+  --green-soft: #17222b;
+  --yellow: #f5c657;
+  --violet: #a891e4;
+  --hairline: #29344c;
+  --surface: #18212f;
+}
+
+/* Remap literal white surfaces to a themed surface so dark mode works
+   site-wide without editing every component. Unlayered rules with a
+   two-class selector beat Tailwind's layered single-class utilities. */
+.dark .bg-white {
+  background-color: var(--surface);
+}
+.dark .bg-white\/95,
+.dark .bg-white\/90 {
+  background-color: color-mix(in srgb, var(--surface) 92%, transparent);
 }
 
 @layer base {
