@@ -98,7 +98,7 @@ export default async function ToolPage({
 
   return (
     <>
-      <SiteHeader variant="tool" />
+      <SiteHeader variant="page" />
       <main>
         {/* Tool hero */}
         <section className="overflow-hidden">

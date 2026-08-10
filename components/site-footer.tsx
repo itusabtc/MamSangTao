@@ -1,40 +1,71 @@
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
+const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] = [
+  {
+    heading: 'Khám phá',
+    links: [
+      { label: 'Công cụ', href: '/#cong-cu' },
+      { label: 'Cách hoạt động', href: '/#cach-hoat-dong' },
+      { label: 'Cho phụ huynh', href: '/#phu-huynh' },
+    ],
+  },
+  {
+    heading: 'Công ty',
+    links: [
+      { label: 'Giới thiệu', href: '/gioi-thieu' },
+      { label: 'Liên hệ', href: '/lien-he' },
+      { label: 'Đăng ký', href: '/dang-ky' },
+    ],
+  },
+  {
+    heading: 'Pháp lý',
+    links: [
+      { label: 'Điều khoản sử dụng', href: '/dieu-khoan' },
+      { label: 'Chính sách quyền riêng tư', href: '/chinh-sach' },
+    ],
+  },
+]
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-hairline bg-cream">
-      <div className="wrap flex flex-col gap-8 py-12 md:flex-row md:items-start md:justify-between">
+      <div className="wrap grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div className="max-w-sm">
           <Link href="/" className="flex items-center gap-2">
             <Sparkles aria-hidden className="h-6 w-6 text-coral" strokeWidth={2.5} />
-
-            <span className="font-display text-xl font-bold text-blue">
-              Mầm Sáng Tạo
-            </span>
+            <span className="font-display text-xl font-bold text-blue">Mầm Sáng Tạo</span>
           </Link>
           <p className="mt-3 text-pretty text-ink/70">
             Nuôi dưỡng trí tưởng tượng, từng ý tưởng một.
           </p>
         </div>
 
-        <nav aria-label="Liên kết chân trang" className="flex gap-8">
-          <a href="#cong-cu" className="text-sm font-bold text-ink/80 hover:text-blue">
-            Công cụ
-          </a>
-          <a href="#phu-huynh" className="text-sm font-bold text-ink/80 hover:text-blue">
-            An toàn
-          </a>
-          <a
-            href="mailto:hello@mamsangtao.vn"
-            className="text-sm font-bold text-ink/80 hover:text-blue"
-          >
-            Liên hệ
-          </a>
-        </nav>
+        {COLUMNS.map((col) => (
+          <nav key={col.heading} aria-label={col.heading}>
+            <h2 className="font-display text-sm font-bold uppercase tracking-wide text-ink/55">
+              {col.heading}
+            </h2>
+            <ul className="mt-4 space-y-3">
+              {col.links.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-sm font-bold text-ink/80 hover:text-blue">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
-      <div className="wrap border-t border-hairline py-5">
-        <p className="text-sm text-ink/55">© 2026 Mầm Sáng Tạo</p>
+      <div className="wrap flex flex-col gap-2 border-t border-hairline py-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-ink/55">© 2026 Mầm Sáng Tạo. Bảo lưu mọi quyền.</p>
+        <a
+          href="mailto:hello@mamsangtao.vn"
+          className="text-sm font-bold text-ink/70 hover:text-blue"
+        >
+          hello@mamsangtao.vn
+        </a>
       </div>
     </footer>
   )

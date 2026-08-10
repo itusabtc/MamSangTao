@@ -122,6 +122,28 @@
     box-shadow: 0 1px 0 color-mix(in srgb, var(--coral) 60%, #7a2f1c);
   }
 
+  /* Form fields */
+  .field {
+    width: 100%;
+    background: var(--cream);
+    border: 1.5px solid var(--hairline);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    color: var(--ink);
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .field::placeholder {
+    color: color-mix(in srgb, var(--ink) 42%, transparent);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 18%, transparent);
+  }
+
   /* Underline stroke under the highlighted hero word */
   .ink-underline {
     position: relative;
