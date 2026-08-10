@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { BrandLogo } from '@/components/brand-logo'
@@ -19,6 +20,87 @@ const PALETTE: { name: string; hex: string; token: string; dark?: boolean }[] = 
   { name: 'Tím', hex: '#8A73C9', token: '--violet', dark: true },
   { name: 'Kem', hex: '#FBF7EF', token: '--cream' },
 ]
+
+const DOWNLOADS: {
+  src: string
+  label: string
+  size: string
+  ratio: string
+  bg: string
+}[] = [
+  {
+    src: '/brand/ad-facebook-link.png',
+    label: 'Facebook Link Ad',
+    size: '1200 × 628',
+    ratio: '1.91 / 1',
+    bg: 'bg-cream',
+  },
+  {
+    src: '/brand/ad-square.png',
+    label: 'Facebook / IG vuông',
+    size: '1080 × 1080',
+    ratio: '1 / 1',
+    bg: 'bg-cream',
+  },
+  {
+    src: '/brand/ad-google-leaderboard.png',
+    label: 'Google Leaderboard',
+    size: '728 × 90',
+    ratio: '728 / 90',
+    bg: 'bg-blue',
+  },
+  {
+    src: '/brand/ad-rectangle.png',
+    label: 'Google Medium Rectangle',
+    size: '300 × 250',
+    ratio: '300 / 250',
+    bg: 'bg-cream',
+  },
+]
+
+function DownloadCard({
+  src,
+  label,
+  size,
+  ratio,
+  bg,
+  fileName,
+}: {
+  src: string
+  label: string
+  size: string
+  ratio: string
+  bg: string
+  fileName: string
+}) {
+  return (
+    <figure className="overflow-hidden rounded-2xl border border-hairline bg-surface">
+      <div className={`grid place-items-center p-4 ${bg}`} style={{ aspectRatio: ratio }}>
+        <Image
+          src={src || '/placeholder.svg'}
+          alt={label}
+          width={1200}
+          height={1200}
+          className="max-h-full w-full object-contain"
+        />
+      </div>
+      <figcaption className="flex items-center justify-between gap-3 px-4 py-3">
+        <div>
+          <p className="text-sm font-bold text-ink">{label}</p>
+          <p className="font-mono text-xs text-ink/55">{size} px</p>
+        </div>
+        <a
+          href={src}
+          download={fileName}
+          className="inline-flex items-center gap-1.5 rounded-full bg-blue px-3 py-2 text-xs font-extrabold text-white transition-colors hover:bg-blue-dark"
+        >
+          <Download className="h-4 w-4" />
+          Tải
+        </a>
+      </figcaption>
+    </figure>
+  )
+}
 
 function Section({
   id,
@@ -68,19 +150,35 @@ export default function BrandPage() {
               <BrandLogo size={56} />
               <span className="text-sm font-bold text-ink/55">Logo ngang (dùng chính)</span>
             </div>
-            <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-hairline bg-cream p-8">
+            <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-hairline bg-ink p-8">
+              <BrandLogo size={56} hideWordmark />
+              <span className="text-sm font-bold text-white/60">Badge trên nền tối</span>
+            </div>
+            <div
+              className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-hairline p-8"
+              style={{
+                backgroundColor: '#f4f1ea',
+                backgroundImage:
+                  'linear-gradient(45deg,#e2ddd2 25%,transparent 25%),linear-gradient(-45deg,#e2ddd2 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e2ddd2 75%),linear-gradient(-45deg,transparent 75%,#e2ddd2 75%)',
+                backgroundSize: '20px 20px',
+                backgroundPosition: '0 0,0 10px,10px -10px,-10px 0',
+              }}
+            >
               <Image
-                src="/brand/logo-mark.png"
-                alt="Biểu tượng chồi non Mầm Sáng Tạo"
+                src="/brand/logo-mark-transparent.png"
+                alt="Biểu tượng chồi non nền trong suốt"
                 width={160}
                 height={160}
                 className="h-32 w-32 object-contain"
               />
-              <span className="text-sm font-bold text-ink/55">Biểu tượng đầy đủ</span>
-            </div>
-            <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-hairline bg-ink p-8">
-              <BrandLogo size={56} hideWordmark />
-              <span className="text-sm font-bold text-white/60">Badge trên nền tối</span>
+              <a
+                href="/brand/logo-mark-transparent.png"
+                download="mam-sang-tao-logo.png"
+                className="inline-flex items-center gap-1.5 rounded-full bg-blue px-3 py-2 text-xs font-extrabold text-white transition-colors hover:bg-blue-dark"
+              >
+                <Download className="h-4 w-4" />
+                PNG trong suốt
+              </a>
             </div>
           </div>
         </Section>
@@ -234,6 +332,23 @@ export default function BrandPage() {
                 Google Display — banner ngang
               </figcaption>
             </figure>
+          </div>
+        </Section>
+
+        {/* Downloads */}
+        <Section id="tai-ve" eyebrow="Tải về" title="Bộ ảnh kích thước chuẩn">
+          <p className="-mt-4 mb-8 max-w-2xl text-pretty text-ink/70">
+            Các mẫu quảng cáo đã cắt theo tỉ lệ chuẩn của Facebook và Google, chừa sẵn vùng trống để
+            bạn thêm tiêu đề và nút kêu gọi. Nhấn &ldquo;Tải&rdquo; để lưu ảnh gốc.
+          </p>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {DOWNLOADS.map((d) => (
+              <DownloadCard
+                key={d.src}
+                {...d}
+                fileName={`mam-sang-tao-${d.src.split('/').pop()}`}
+              />
+            ))}
           </div>
         </Section>
       </main>
