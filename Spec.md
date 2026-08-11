@@ -18,7 +18,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 
 - Trang chủ responsive và ba landing page công cụ.
 - Luồng tạo tranh mẫu: nhập ý tưởng → chờ tạo → xem bốn phương án → chọn phong cách/tác phẩm → thao tác tiếp.
-- Chế độ Truyện và Lập trình ở mức bản xem trước bằng nội dung mẫu.
+- Công cụ Truyện tạo bản nháp nhiều trang, chỉnh sửa từng trang và tải TXT; Lập trình ở mức bản xem trước.
 - Tìm kiếm nội bộ, dark mode, menu mobile, trang giới thiệu/pháp lý/liên hệ.
 - Metadata, Open Graph, robots và sitemap.
 
@@ -42,6 +42,13 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 9. Mọi thao tác prototype phải giải thích rõ rằng đây chưa phải ảnh AI thật.
 
 ## 5. Yêu cầu UX
+
+### Luồng Truyện
+
+1. Nhập ý tưởng, nhân vật, bối cảnh và chọn giọng kể.
+2. Tạo bản nháp bốn trang cục bộ, giải thích rõ chưa dùng AI.
+3. Cho phép sửa tên truyện và nội dung từng trang, thêm/xóa/chuyển trang.
+4. Hiển thị số trang, số từ và cho phép tải toàn bộ truyện dạng TXT.
 
 - Mobile-first; vùng bấm tối thiểu 44px.
 - Dưới 901px phải có menu điều hướng thay thế nav desktop.
@@ -78,6 +85,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Bàn vẽ mở toàn màn hình, khóa cuộn nền, focus đúng đầu công cụ và có nút thu nhỏ/phóng to.
 - [x] Khi đóng bàn vẽ, cuộn nền được khôi phục và focus quay lại đúng phương án tranh đang chọn.
 - [x] Tiêu đề, dòng phụ, màu chữ, ba vùng nền và vị trí các icon mẫu đều chỉnh sửa độc lập.
+- [x] Luồng Truyện có cấu hình đầu vào, bản nháp nhiều trang, trình sửa trang và tải TXT.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.

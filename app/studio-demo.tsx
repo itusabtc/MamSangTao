@@ -4,9 +4,10 @@ import { Check, Download, Paintbrush, RefreshCcw, RotateCcw, Sparkles } from 'lu
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
 import { DrawingCanvas } from '@/components/drawing-canvas'
+import { StoryStudio } from '@/components/story-studio'
 
 type Mode = 'tranh' | 'truyen' | 'laptrinh'
-type Phase = 'form' | 'loading' | 'results' | 'editor' | 'simple-result'
+type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'simple-result'
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: 'tranh', label: 'Tranh', icon: '🎨' },
@@ -23,12 +24,7 @@ const CARD_COLORS = [
   ['#f1eafa', '#64aa82', '#294d9b'],
 ] as const
 
-const SIMPLE_RESULTS: Record<Exclude<Mode, 'tranh'>, (idea: string) => { title: string; body: string; emoji: string }> = {
-  truyen: (idea) => ({
-    emoji: '📖',
-    title: 'Trang truyện đầu tiên đang mở ra!',
-    body: `Từ ý tưởng “${idea}”, bé sẽ chọn nhân vật chính, nơi câu chuyện diễn ra và một điều bất ngờ ở cuối. Tính năng tạo truyện đầy đủ sẽ có trong giai đoạn tiếp theo.`,
-  }),
+const SIMPLE_RESULTS: Record<'laptrinh', (idea: string) => { title: string; body: string; emoji: string }> = {
   laptrinh: (idea) => ({
     emoji: '🧩',
     title: 'Bảng xếp khối lệnh đã bày ra!',
@@ -46,6 +42,9 @@ export function StudioDemo() {
   const [selected, setSelected] = useState(0)
   const [simpleResult, setSimpleResult] = useState<{ title: string; body: string; emoji: string } | null>(null)
   const [notice, setNotice] = useState('')
+  const [storyCharacter, setStoryCharacter] = useState('chú mèo Mít')
+  const [storySetting, setStorySetting] = useState('khu vườn trên mây')
+  const [storyTone, setStoryTone] = useState('ấm áp')
 
   useEffect(() => {
     const fromUrl = params.get('idea')
@@ -75,8 +74,10 @@ export function StudioDemo() {
       setLoadingStep(0)
       setSelected(0)
       setPhase('loading')
+    } else if (mode === 'truyen') {
+      setPhase('story-editor')
     } else {
-      setSimpleResult(SIMPLE_RESULTS[mode](trimmed))
+      setSimpleResult(SIMPLE_RESULTS.laptrinh(trimmed))
       setPhase('simple-result')
     }
   }
@@ -151,6 +152,8 @@ export function StudioDemo() {
         </div>
       ) : phase === 'editor' ? (
         <DrawingCanvas idea={idea} style={style} colors={CARD_COLORS[selected]} subject={['🚀', '🐋', '🏰', '🐱'][selected]} onClose={closeEditor} />
+      ) : phase === 'story-editor' ? (
+        <StoryStudio idea={idea} character={storyCharacter} setting={storySetting} tone={storyTone} onReset={reset} />
       ) : phase === 'results' ? (
         <div className="mt-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -188,6 +191,7 @@ export function StudioDemo() {
           <label htmlFor="idea-input" className="mb-2 block text-sm font-extrabold">Ý tưởng của bé</label>
           <textarea id="idea-input" value={idea} onChange={(event) => setIdea(event.target.value)} rows={3} required placeholder="Ví dụ: một chú cá voi bay giữa những vì sao…" className="field resize-none" />
           {mode === 'tranh' ? <fieldset className="mt-5"><legend className="text-sm font-extrabold">Chọn phong cách</legend><div className="mt-2 flex flex-wrap gap-2">{STYLES.map((item) => <button key={item} type="button" onClick={() => setStyle(item)} aria-pressed={style === item} className={`min-h-11 rounded-full px-4 text-sm font-bold ${style === item ? 'bg-violet text-white' : 'bg-cream text-ink/70 hover:text-blue'}`}>{item}</button>)}</div></fieldset> : null}
+          {mode === 'truyen' ? <div className="mt-5 grid gap-3 sm:grid-cols-3"><label className="text-sm font-extrabold">Nhân vật<input value={storyCharacter} onChange={(event) => setStoryCharacter(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Bối cảnh<input value={storySetting} onChange={(event) => setStorySetting(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Giọng kể<select value={storyTone} onChange={(event) => setStoryTone(event.target.value)} className="field mt-2"><option>ấm áp</option><option>hài hước</option><option>phiêu lưu</option><option>bí ẩn</option></select></label></div> : null}
           <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-ink/55">Mô tả nhân vật, màu sắc hoặc nơi câu chuyện diễn ra.</p><button type="submit" className="btn btn-coral w-full justify-center sm:w-auto">{mode === 'tranh' ? 'Tạo 4 tranh mẫu' : 'Tạo dự án'}<Sparkles className="h-4 w-4" /></button></div>
         </form>
       )}
