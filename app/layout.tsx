@@ -1,17 +1,68 @@
-import type { Metadata } from "next";
-import { Nunito, Quicksand } from "next/font/google";
-import "./globals.css";
+import { Analytics } from '@vercel/analytics/next'
+import type { Metadata, Viewport } from 'next'
+import { Nunito, Quicksand } from 'next/font/google'
+import { ScrollToTop } from '@/components/scroll-to-top'
+import './globals.css'
 
-const body = Nunito({ variable:"--font-body", subsets:["latin","vietnamese"] });
-const display = Quicksand({ variable:"--font-display", subsets:["latin","vietnamese"] });
+const nunito = Nunito({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['400', '600', '700', '800', '900'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const quicksand = Quicksand({
+  subsets: ['latin', 'vietnamese'],
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mamsangtao.vn"),
-  title: { default:"Mầm Sáng Tạo – Vẽ, kể chuyện và học lập trình cho trẻ", template:"%s | Mầm Sáng Tạo" },
-  description:"Xưởng sáng tạo an toàn cho trẻ 6–12 tuổi: vẽ tranh từ ý tưởng, tạo truyện riêng và làm quen lập trình bằng khối.",
-  keywords:["vẽ tranh cho trẻ em","tạo truyện cho bé","lập trình trẻ em","hoạt động sáng tạo cho bé"],
-  openGraph:{title:"Mầm Sáng Tạo",description:"Mọi ý tưởng nhỏ đều có thể nở hoa.",locale:"vi_VN",type:"website",images:[{url:"/og.png",width:1792,height:896,alt:"Mầm Sáng Tạo – Mọi ý tưởng nhỏ đều có thể nở hoa"}]},
-  twitter:{card:"summary_large_image",title:"Mầm Sáng Tạo",description:"Mọi ý tưởng nhỏ đều có thể nở hoa.",images:["/og.png"]},
-};
+  title: 'Mầm Sáng Tạo — Xưởng sáng tạo an toàn cho trẻ 6–12 tuổi',
+  description:
+    'Nơi trẻ vẽ tranh, kể chuyện và làm quen với lập trình — bằng trí tưởng tượng của chính mình. Không quảng cáo, không mạng xã hội.',
+  generator: 'v0.app',
+  openGraph: {
+    title: 'Mầm Sáng Tạo — Xưởng sáng tạo an toàn cho trẻ 6–12 tuổi',
+    description:
+      'Nơi trẻ vẽ tranh, kể chuyện và làm quen với lập trình — bằng trí tưởng tượng của chính mình.',
+    type: 'website',
+    locale: 'vi_VN',
+    images: [{ url: '/brand/banner.png', width: 1024, height: 1024, alt: 'Mầm Sáng Tạo' }],
+  },
+}
 
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="vi"><body className={`${body.variable} ${display.variable}`}>{children}</body></html>}
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fbf7ef' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f1521' },
+  ],
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html
+      lang="vi"
+      className={`${nunito.variable} ${quicksand.variable} bg-cream`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="antialiased font-body">
+        {children}
+        <ScrollToTop />
+        {process.env.NODE_ENV === 'production' && <Analytics />}
+      </body>
+    </html>
+  )
+}
