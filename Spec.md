@@ -55,12 +55,13 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 ### Luồng Lập trình
 
 1. Nhập nhiệm vụ rồi mở xưởng khối lệnh.
-2. Bấm hoặc kéo các khối di chuyển, xoay, nói, phát nốt nhạc và đổi màu vào chương trình.
-3. Sắp xếp bằng kéo thả hoặc nút lên/xuống; cho phép xóa từng khối hoặc toàn bộ.
-4. Chạy tuần tự trên sân khấu, tô sáng khối hiện tại, dừng và đặt lại trạng thái.
-5. Hỗ trợ toàn màn hình, khôi phục mẫu và tải dự án JSON cục bộ.
-6. Chế độ Game nhận diện prompt để chọn chủ đề; hỗ trợ Nhặt vật phẩm, Đua về đích, Tìm kho báu, Mê cung, Chạy vượt chướng ngại và Bay qua cổng, có tính điểm và nhạc nền Web Audio.
-7. Khi chọn Ý tưởng khác, trang cuộn và focus lại đúng ô nhập ý tưởng của tab hiện tại.
+2. Chọn Tự nhận diện hoặc một trong sáu loại game ngay dưới prompt; dự án mở thẳng ở chế độ game tương ứng.
+3. Bấm hoặc kéo các khối di chuyển, xoay, nói, phát nốt nhạc và đổi màu vào chương trình.
+4. Sắp xếp bằng kéo thả hoặc nút lên/xuống; cho phép xóa từng khối hoặc toàn bộ.
+5. Chạy tuần tự trên sân khấu, tô sáng khối hiện tại, dừng và đặt lại trạng thái.
+6. Hỗ trợ toàn màn hình, khôi phục mẫu và tải dự án JSON cục bộ.
+7. Game nhận diện prompt để chọn chủ đề; hỗ trợ sáu luật chơi, tính điểm và nhạc nền Web Audio.
+8. Khi chọn Ý tưởng khác, trang cuộn và focus lại đúng ô nhập ý tưởng của tab hiện tại.
 
 - Mobile-first; vùng bấm tối thiểu 44px.
 - Dưới 901px phải có menu điều hướng thay thế nav desktop.
@@ -104,6 +105,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Có chế độ Game, tính điểm, điều khiển bàn phím, nhạc nền và khối phát âm thanh.
 - [x] Game bám prompt theo chủ đề và có bốn mẫu luật chơi đơn giản; luồng quay lại focus đúng ô nhập.
 - [x] Có mẫu platform chạy/nhảy và mẫu bay qua cổng với trọng lực, va chạm và tính điểm.
+- [x] Loại game được chọn ngay dưới prompt và xưởng mở trực tiếp đúng giao diện game.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.
