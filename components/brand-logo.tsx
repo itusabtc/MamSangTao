@@ -38,7 +38,9 @@ export function BrandLogo({
         />
       </span>
       {!hideWordmark && (
-        <span className={`font-display text-xl font-bold leading-none ${wordmarkClassName}`}>
+        <span
+          className={`font-display text-lg font-extrabold leading-none tracking-tight sm:text-[22px] ${wordmarkClassName}`}
+        >
           Mầm Sáng Tạo
         </span>
       )}

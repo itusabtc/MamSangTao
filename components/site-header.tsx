@@ -9,51 +9,67 @@ type SiteHeaderProps = {
   variant?: 'home' | 'page'
 }
 
-export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
-  return (
-    <header className="sticky top-0 z-50 border-b border-hairline bg-cream/90 backdrop-blur-sm">
-      <div className="wrap flex h-[86px] items-center justify-between gap-4">
-        <BrandLogo size={44} />
+type NavItem = { label: string; href: string }
 
+export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
+  const navItems: NavItem[] =
+    variant === 'home'
+      ? [
+          { label: 'Công cụ', href: '#cong-cu' },
+          { label: 'Cách hoạt động', href: '#cach-hoat-dong' },
+          { label: 'Giới thiệu', href: '/gioi-thieu' },
+          { label: 'Liên hệ', href: '/lien-he' },
+        ]
+      : [
+          { label: 'Công cụ', href: '/#cong-cu' },
+          { label: 'Cách hoạt động', href: '/#cach-hoat-dong' },
+          { label: 'Giới thiệu', href: '/gioi-thieu' },
+          { label: 'Liên hệ', href: '/lien-he' },
+        ]
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-hairline bg-cream/90 backdrop-blur-md">
+      <div className="wrap flex h-[88px] items-center gap-3 sm:gap-6">
+        {/* Left: brand */}
+        <div className="flex shrink-0 items-center">
+          <BrandLogo size={46} />
+        </div>
+
+        {/* Center: primary navigation */}
         <nav
           aria-label="Điều hướng chính"
-          className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 min-[901px]:flex"
+          className="hidden flex-1 items-center justify-center gap-1 min-[901px]:flex"
         >
-          {variant === 'home' ? (
-            <>
-              <a href="#cong-cu" className="text-sm font-bold text-ink/80 hover:text-blue">
-                Công cụ
-              </a>
-              <a href="#cach-hoat-dong" className="text-sm font-bold text-ink/80 hover:text-blue">
-                Cách hoạt động
-              </a>
-            </>
-          ) : (
-            <Link href="/#cong-cu" className="text-sm font-bold text-ink/80 hover:text-blue">
-              Công cụ
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="group relative rounded-lg px-3.5 py-2 text-[16px] font-bold text-ink/85 transition-colors hover:text-blue"
+            >
+              {item.label}
+              <span className="pointer-events-none absolute inset-x-3.5 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-blue transition-transform duration-200 group-hover:scale-x-100" />
             </Link>
-          )}
-          <Link href="/gioi-thieu" className="text-sm font-bold text-ink/80 hover:text-blue">
-            Giới thiệu
-          </Link>
-          <Link href="/lien-he" className="text-sm font-bold text-ink/80 hover:text-blue">
-            Liên hệ
-          </Link>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Right: actions */}
+        <div className="ml-auto flex shrink-0 items-center gap-1 min-[901px]:ml-0 sm:gap-1.5">
           <Link
             href="/danh-gia"
-            className="hidden items-center gap-1.5 rounded-full px-2.5 py-2 text-sm font-bold text-ink/80 transition-colors hover:text-blue sm:inline-flex"
+            className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-[16px] font-bold text-ink/85 transition-colors hover:text-blue lg:inline-flex"
           >
             <Star className="h-[18px] w-[18px] fill-yellow text-yellow" />
             Đánh giá
           </Link>
           <SiteSearch />
           <ThemeToggle />
-          <Link href="/dang-nhap" className="btn btn-primary ml-1">
+          <Link
+            href="/dang-nhap"
+            className="btn btn-primary ml-1.5 text-[15px]"
+            aria-label="Đăng nhập"
+          >
             <LogIn className="h-[18px] w-[18px]" />
-            Đăng nhập
+            <span className="hidden sm:inline">Đăng nhập</span>
           </Link>
         </div>
       </div>
