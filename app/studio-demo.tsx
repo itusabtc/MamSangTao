@@ -76,6 +76,10 @@ export function StudioDemo() {
   function reset() {
     setPhase('form')
     setNotice('')
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      document.getElementById('creative-studio')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      document.getElementById('idea-input')?.focus({ preventScroll: true })
+    }))
   }
 
   function closeEditor() {
@@ -116,7 +120,7 @@ export function StudioDemo() {
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-4xl rounded-3xl border border-hairline bg-white p-5 text-left shadow-[0_16px_40px_rgba(29,49,80,0.10)] sm:p-7">
+    <div id="creative-studio" className="mx-auto mt-10 max-w-4xl scroll-mt-24 rounded-3xl border border-hairline bg-white p-5 text-left shadow-[0_16px_40px_rgba(29,49,80,0.10)] sm:p-7">
       <div role="tablist" aria-label="Chọn loại dự án" className="flex flex-wrap gap-2">
         {MODES.map((item) => (
           <button
