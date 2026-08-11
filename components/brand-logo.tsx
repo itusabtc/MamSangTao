@@ -8,9 +8,16 @@ type BrandLogoProps = {
   size?: number
   /** Hide the "Mầm Sáng Tạo" wordmark, showing only the badge. */
   hideWordmark?: boolean
+  /** Override the wordmark color, e.g. for dark backgrounds. */
+  wordmarkClassName?: string
 }
 
-export function BrandLogo({ className = '', size = 40, hideWordmark = false }: BrandLogoProps) {
+export function BrandLogo({
+  className = '',
+  size = 40,
+  hideWordmark = false,
+  wordmarkClassName = 'text-blue',
+}: BrandLogoProps) {
   return (
     <Link
       href="/"
@@ -31,7 +38,9 @@ export function BrandLogo({ className = '', size = 40, hideWordmark = false }: B
         />
       </span>
       {!hideWordmark && (
-        <span className="font-display text-xl font-bold leading-none text-blue">Mầm Sáng Tạo</span>
+        <span className={`font-display text-xl font-bold leading-none ${wordmarkClassName}`}>
+          Mầm Sáng Tạo
+        </span>
       )}
     </Link>
   )
