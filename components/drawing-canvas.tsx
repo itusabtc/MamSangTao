@@ -21,14 +21,21 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasWrapRef = useRef<HTMLDivElement>(null)
   const drawing = useRef(false)
-  const stickerId = useRef(0)
+  const stickerId = useRef(2)
   const draggingSticker = useRef<{ id: number; offsetX: number; offsetY: number } | null>(null)
   const history = useRef<string[]>([])
   const [color, setColor] = useState(PALETTE[0])
   const [size, setSize] = useState(10)
   const [eraser, setEraser] = useState(false)
-  const [stickers, setStickers] = useState<StickerItem[]>([])
+  const [stickers, setStickers] = useState<StickerItem[]>([
+    { id: 1, emoji: subject, x: 50, y: 50, size: 120 },
+    { id: 2, emoji: '☀️', x: 82, y: 16, size: 104 },
+  ])
   const [selectedSticker, setSelectedSticker] = useState<number | null>(null)
+  const [backgrounds, setBackgrounds] = useState<[string, string, string]>([colors[0], colors[1], colors[2]])
+  const [title, setTitle] = useState(idea.slice(0, 44))
+  const [subtitle, setSubtitle] = useState(`${style} · Mầm Sáng Tạo`)
+  const [textColor, setTextColor] = useState('#1d3150')
   const [fullscreen, setFullscreen] = useState(true)
   const [status, setStatus] = useState('Bàn vẽ đã sẵn sàng.')
 
@@ -42,27 +49,12 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
     const canvas = canvasRef.current
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return
-    context.globalCompositeOperation = 'source-over'
-    context.fillStyle = colors[0]
-    context.fillRect(0, 0, canvas.width, canvas.height)
-    context.fillStyle = '#f5c34d'
-    context.beginPath(); context.arc(820, 120, 68, 0, Math.PI * 2); context.fill()
-    context.fillStyle = colors[1]
-    context.beginPath(); context.ellipse(235, 700, 390, 250, 0, Math.PI, 0); context.fill()
-    context.fillStyle = colors[2]
-    context.beginPath(); context.ellipse(760, 720, 480, 280, 0, Math.PI, 0); context.fill()
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-    context.font = '120px sans-serif'
-    context.fillText(subject, 500, 375)
-    context.textAlign = 'left'
-    context.fillStyle = '#1d3150'
-    context.font = '700 34px sans-serif'
-    context.fillText(idea.slice(0, 44), 48, 58)
-    context.font = '22px sans-serif'
-    context.fillText(`${style} · Mầm Sáng Tạo`, 48, 100)
+    context.clearRect(0, 0, canvas.width, canvas.height)
     history.current = [canvas.toDataURL()]
-    setStickers([])
+    stickerId.current = 2
+    setStickers([{ id: 1, emoji: subject, x: 50, y: 50, size: 120 }, { id: 2, emoji: '☀️', x: 82, y: 16, size: 104 }])
+    setBackgrounds([colors[0], colors[1], colors[2]])
+    setTitle(idea.slice(0, 44)); setSubtitle(`${style} · Mầm Sáng Tạo`); setTextColor('#1d3150')
     setSelectedSticker(null)
     setStatus('Đã khôi phục tranh mẫu.')
   }, [colors, idea, style, subject])
@@ -130,8 +122,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   function clear() {
     const canvas = canvasRef.current!
     const context = canvas.getContext('2d')!
-    context.globalCompositeOperation = 'source-over'
-    context.fillStyle = '#ffffff'; context.fillRect(0, 0, canvas.width, canvas.height)
+    context.clearRect(0, 0, canvas.width, canvas.height)
     setStickers([]); setSelectedSticker(null)
     saveHistory(); setStatus('Đã làm sạch trang vẽ.')
   }
@@ -185,7 +176,15 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
     const exportCanvas = document.createElement('canvas')
     exportCanvas.width = canvas.width; exportCanvas.height = canvas.height
     const context = exportCanvas.getContext('2d')!
+    context.fillStyle = backgrounds[0]; context.fillRect(0, 0, exportCanvas.width, exportCanvas.height)
+    context.fillStyle = backgrounds[1]
+    context.beginPath(); context.ellipse(235, 700, 390, 250, 0, Math.PI, 0); context.fill()
+    context.fillStyle = backgrounds[2]
+    context.beginPath(); context.ellipse(760, 720, 480, 280, 0, Math.PI, 0); context.fill()
     context.drawImage(canvas, 0, 0)
+    context.textAlign = 'left'; context.textBaseline = 'alphabetic'; context.fillStyle = textColor
+    context.font = '700 34px sans-serif'; context.fillText(title.slice(0, 44), 48, 58)
+    context.font = '22px sans-serif'; context.fillText(subtitle.slice(0, 60), 48, 100)
     context.textAlign = 'center'; context.textBaseline = 'middle'
     stickers.forEach((item) => {
       context.font = `${item.size}px sans-serif`
@@ -222,10 +221,23 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
           <p className="mt-4 text-sm font-extrabold">Sticker</p>
           <div className="mt-2 grid grid-cols-3 gap-2">{STICKERS.map((item) => <button key={item} type="button" onClick={() => addSticker(item)} className="grid h-11 place-items-center rounded-xl bg-white text-xl" aria-label={`Thêm sticker ${item}`}>{item}</button>)}</div>
           <button type="button" onClick={removeSelectedSticker} className="btn mt-3 w-full justify-center bg-white px-2"><Trash2 className="h-4 w-4" />Xóa sticker chọn</button>
+          <div className="mt-5 border-t border-hairline pt-4">
+            <p className="text-sm font-extrabold">Chữ trên tranh</p>
+            <label className="mt-2 block text-xs font-bold">Tiêu đề<input value={title} maxLength={44} onChange={(event) => setTitle(event.target.value)} className="field mt-1 min-h-10 px-3 py-2 text-sm" /></label>
+            <label className="mt-2 block text-xs font-bold">Dòng phụ<input value={subtitle} maxLength={60} onChange={(event) => setSubtitle(event.target.value)} className="field mt-1 min-h-10 px-3 py-2 text-sm" /></label>
+            <label className="mt-2 flex items-center justify-between text-xs font-bold">Màu chữ<input type="color" value={textColor} onChange={(event) => setTextColor(event.target.value)} className="h-10 w-14 rounded-lg border border-hairline bg-white p-1" /></label>
+          </div>
+          <div className="mt-4 border-t border-hairline pt-4">
+            <p className="text-sm font-extrabold">Màu các vùng nền</p>
+            {(['Bầu trời', 'Đồi trái', 'Đồi phải'] as const).map((label, index) => <label key={label} className="mt-2 flex items-center justify-between text-xs font-bold">{label}<input type="color" value={backgrounds[index]} onChange={(event) => setBackgrounds((items) => items.map((item, itemIndex) => itemIndex === index ? event.target.value : item) as [string, string, string])} className="h-10 w-14 rounded-lg border border-hairline bg-white p-1" /></label>)}
+          </div>
         </div>
         <div>
-          <div ref={canvasWrapRef} className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-hairline bg-white shadow-inner" onPointerDown={() => setSelectedSticker(null)}>
-            <canvas ref={canvasRef} width={1000} height={750} onPointerDown={start} onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} className="absolute inset-0 h-full w-full touch-none" aria-label="Vùng vẽ tranh tương tác" />
+          <div ref={canvasWrapRef} className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border-2 border-hairline shadow-inner" style={{ backgroundColor: backgrounds[0] }} onPointerDown={() => setSelectedSticker(null)}>
+            <div className="pointer-events-none absolute -bottom-[28%] -left-[15%] h-[65%] w-[75%] rounded-[50%]" style={{ backgroundColor: backgrounds[1] }} />
+            <div className="pointer-events-none absolute -bottom-[30%] -right-[15%] h-[70%] w-[85%] rounded-[50%]" style={{ backgroundColor: backgrounds[2] }} />
+            <div className="pointer-events-none absolute left-[4.8%] top-[4%] z-10 max-w-[75%]" style={{ color: textColor }}><p className="truncate text-[clamp(16px,3.4vw,34px)] font-bold leading-tight">{title}</p><p className="mt-1 truncate text-[clamp(12px,2.2vw,22px)]">{subtitle}</p></div>
+            <canvas ref={canvasRef} width={1000} height={750} onPointerDown={start} onPointerMove={move} onPointerUp={stop} onPointerCancel={stop} className="absolute inset-0 z-10 h-full w-full touch-none" aria-label="Vùng vẽ tranh tương tác" />
             {stickers.map((item) => (
               <button
                 key={item.id}
@@ -236,7 +248,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
                 onPointerMove={moveSticker}
                 onPointerUp={stopStickerDrag}
                 onPointerCancel={stopStickerDrag}
-                className={`absolute grid touch-none select-none place-items-center rounded-xl border-2 bg-white/20 leading-none ${selectedSticker === item.id ? 'border-blue shadow-lg' : 'border-transparent hover:border-white'}`}
+                className={`absolute z-20 grid touch-none select-none place-items-center rounded-xl border-2 bg-white/20 leading-none ${selectedSticker === item.id ? 'border-blue shadow-lg' : 'border-transparent hover:border-white'}`}
                 style={{ left: `${item.x}%`, top: `${item.y}%`, width: `${item.size / 10}%`, aspectRatio: '1', fontSize: `clamp(28px, ${item.size / 10}vw, ${item.size}px)`, transform: 'translate(-50%, -50%)' }}
               >{item.emoji}</button>
             ))}
