@@ -25,7 +25,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 ### Chưa có trong phiên bản này
 
 - API tạo ảnh hoặc mô hình ngôn ngữ thật.
-- Trình vẽ canvas/Excalidraw và Blockly thật.
+- API tạo ảnh AI, Excalidraw và Blockly thật. Bàn vẽ canvas nội bộ đã hoạt động.
 - Đăng nhập, lưu cloud, thanh toán hoặc gửi email thật.
 - Chia sẻ công khai tác phẩm của trẻ.
 
@@ -37,8 +37,9 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 4. Bấm **Tạo 4 tranh mẫu**.
 5. Hiển thị lần lượt các trạng thái: gom ý tưởng → pha màu → hoàn thiện.
 6. Hiển thị bốn phương án minh họa prototype, có trạng thái được chọn rõ ràng.
-7. Cho phép: chọn tranh, đổi phong cách, tạo lại, vẽ thêm và tải bản mẫu.
-8. Mọi thao tác prototype phải giải thích rõ rằng đây chưa phải ảnh AI thật.
+7. Cho phép: chọn tranh, đổi phong cách, tạo lại, mở bàn vẽ và tải bản mẫu.
+8. Trong bàn vẽ, người dùng có thể dùng cọ/tẩy, hoàn tác, thêm sticker, khôi phục mẫu và tải PNG.
+9. Mọi thao tác prototype phải giải thích rõ rằng đây chưa phải ảnh AI thật.
 
 ## 5. Yêu cầu UX
 
@@ -73,10 +74,11 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Chip gợi ý tự điền đúng ý tưởng.
 - [x] Mobile menu mở/đóng được, đóng khi chọn liên kết và có thuộc tính accessibility.
 - [x] Luồng Tranh có input, style, loading, bốn kết quả và hành động tiếp theo.
+- [x] Bàn vẽ canvas hỗ trợ chuột/cảm ứng, cọ màu, tẩy, hoàn tác, sticker và tải PNG.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.
 
 ## 9. Giai đoạn tiếp theo
 
-Sau khi prototype được xác nhận, ưu tiên tích hợp API tạo ảnh có kiểm duyệt đầu vào/đầu ra, sau đó mới thêm trình vẽ và lưu tác phẩm. Truyện và Blockly được triển khai sau khi luồng Tranh có số liệu sử dụng thực tế.
+Sau khi bàn vẽ được xác nhận, ưu tiên tích hợp API tạo ảnh có kiểm duyệt đầu vào/đầu ra, rồi bổ sung lưu tác phẩm. Truyện và Blockly được triển khai sau khi luồng Tranh có số liệu sử dụng thực tế.

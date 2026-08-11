@@ -3,9 +3,10 @@
 import { Check, Download, Paintbrush, RefreshCcw, RotateCcw, Sparkles } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
+import { DrawingCanvas } from '@/components/drawing-canvas'
 
 type Mode = 'tranh' | 'truyen' | 'laptrinh'
-type Phase = 'form' | 'loading' | 'results' | 'simple-result'
+type Phase = 'form' | 'loading' | 'results' | 'editor' | 'simple-result'
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: 'tranh', label: 'Tranh', icon: '🎨' },
@@ -138,6 +139,8 @@ export function StudioDemo() {
             <p className="mt-5 text-sm text-ink/60">Đây là mô phỏng trải nghiệm; website chưa gọi API tạo ảnh thật.</p>
           </div>
         </div>
+      ) : phase === 'editor' ? (
+        <DrawingCanvas idea={idea} style={style} colors={CARD_COLORS[selected]} subject={['🚀', '🐋', '🏰', '🐱'][selected]} onClose={() => setPhase('results')} />
       ) : phase === 'results' ? (
         <div className="mt-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -162,7 +165,7 @@ export function StudioDemo() {
 
           <div className="mt-6 flex flex-wrap gap-2">{STYLES.map((item) => <button key={item} type="button" onClick={() => setStyle(item)} className={`min-h-11 rounded-full px-4 text-sm font-bold ${style === item ? 'bg-violet text-white' : 'bg-cream text-ink/70'}`}>{item}</button>)}</div>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button type="button" onClick={() => setNotice('Đã chọn bản này. Trình vẽ canvas sẽ được kết nối ở giai đoạn tiếp theo.')} className="btn btn-primary justify-center"><Paintbrush className="h-4 w-4" />Vẽ thêm</button>
+            <button type="button" onClick={() => setPhase('editor')} className="btn btn-primary justify-center"><Paintbrush className="h-4 w-4" />Mở bàn vẽ</button>
             <button type="button" onClick={downloadPrototype} className="btn justify-center border border-hairline bg-surface text-ink"><Download className="h-4 w-4" />Tải bản mẫu</button>
             <button type="button" onClick={reset} className="btn justify-center text-ink/70"><RotateCcw className="h-4 w-4" />Ý tưởng khác</button>
           </div>
