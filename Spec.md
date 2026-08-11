@@ -59,7 +59,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 3. Sắp xếp bằng kéo thả hoặc nút lên/xuống; cho phép xóa từng khối hoặc toàn bộ.
 4. Chạy tuần tự trên sân khấu, tô sáng khối hiện tại, dừng và đặt lại trạng thái.
 5. Hỗ trợ toàn màn hình, khôi phục mẫu và tải dự án JSON cục bộ.
-6. Chế độ Game nhận diện từ khóa trong prompt để chọn chủ đề/nhân vật/màu/vật phẩm; hỗ trợ Nhặt vật phẩm, Đua về đích, Tìm kho báu và Mê cung, điều khiển phím mũi tên, tính điểm và nhạc nền Web Audio.
+6. Chế độ Game nhận diện prompt để chọn chủ đề; hỗ trợ Nhặt vật phẩm, Đua về đích, Tìm kho báu, Mê cung, Chạy vượt chướng ngại và Bay qua cổng, có tính điểm và nhạc nền Web Audio.
 7. Khi chọn Ý tưởng khác, trang cuộn và focus lại đúng ô nhập ý tưởng của tab hiện tại.
 
 - Mobile-first; vùng bấm tối thiểu 44px.
@@ -103,6 +103,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Xưởng Lập trình có palette khối, vùng chương trình, chạy thử sân khấu và tải JSON.
 - [x] Có chế độ Game, tính điểm, điều khiển bàn phím, nhạc nền và khối phát âm thanh.
 - [x] Game bám prompt theo chủ đề và có bốn mẫu luật chơi đơn giản; luồng quay lại focus đúng ô nhập.
+- [x] Có mẫu platform chạy/nhảy và mẫu bay qua cổng với trọng lực, va chạm và tính điểm.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.
