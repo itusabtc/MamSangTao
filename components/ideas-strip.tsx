@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 const IDEAS = [
   'Vẽ chú mèo phi hành gia',
   'Kể chuyện về lòng dũng cảm',
@@ -13,15 +15,12 @@ export function IdeasStrip() {
         <ul className="flex flex-wrap gap-2.5">
           {IDEAS.map((idea) => (
             <li key={idea}>
-              <a
-                href="#thu-ngay"
-                className="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-cream px-4 py-2 text-sm font-bold text-ink transition-colors hover:border-coral hover:text-blue"
+              <Link
+                href={`/?idea=${encodeURIComponent(idea)}#thu-ngay`}
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-hairline bg-cream px-4 py-2 text-sm font-bold text-ink transition-colors hover:border-coral hover:text-blue"
               >
-                {idea}
-                <span aria-hidden className="text-coral">
-                  ↗
-                </span>
-              </a>
+                {idea}<span aria-hidden className="text-coral">↗</span>
+              </Link>
             </li>
           ))}
         </ul>

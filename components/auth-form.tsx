@@ -141,9 +141,9 @@ export function AuthForm({ mode }: AuthFormProps) {
               <input type="checkbox" className="h-5 w-5 rounded border-hairline accent-blue" />
               Ghi nhớ đăng nhập
             </label>
-            <a href="#" className="font-bold text-blue hover:underline">
+            <button type="button" className="font-bold text-blue hover:underline">
               Quên mật khẩu?
-            </a>
+            </button>
           </div>
         )}
       </div>

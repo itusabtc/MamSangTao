@@ -80,8 +80,14 @@ export async function generateMetadata({
   const tool = TOOLS[slug]
   if (!tool) return { title: 'Không tìm thấy công cụ — Mầm Sáng Tạo' }
   return {
-    title: `${tool.title} — Mầm Sáng Tạo`,
+    title: tool.title,
     description: tool.description,
+    alternates: { canonical: `/cong-cu/${slug}` },
+    openGraph: {
+      title: tool.title,
+      description: tool.description,
+      url: `/cong-cu/${slug}`,
+    },
   }
 }
 

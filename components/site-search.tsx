@@ -51,6 +51,11 @@ export function SiteSearch() {
   const inputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
+  function closeSearch() {
+    setOpen(false)
+    setQuery('')
+  }
+
   const results = useMemo(() => {
     const q = normalize(query.trim())
     if (!q) return ITEMS
@@ -64,12 +69,11 @@ export function SiteSearch() {
       const id = window.setTimeout(() => inputRef.current?.focus(), 30)
       return () => window.clearTimeout(id)
     }
-    setQuery('')
   }, [open])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') closeSearch()
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         setOpen(true)
@@ -87,7 +91,7 @@ export function SiteSearch() {
   }, [open])
 
   function go(href: string) {
-    setOpen(false)
+    closeSearch()
     router.push(href)
   }
 
@@ -113,7 +117,7 @@ export function SiteSearch() {
           <button
             type="button"
             aria-label="Đóng tìm kiếm"
-            onClick={() => setOpen(false)}
+            onClick={closeSearch}
             className="absolute inset-0 bg-ink/40 backdrop-blur-sm"
           />
           <div className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-hairline bg-surface shadow-[0_24px_60px_rgba(0,0,0,0.25)]">
@@ -129,7 +133,7 @@ export function SiteSearch() {
               />
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeSearch}
                 aria-label="Đóng"
                 className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-ink/50 hover:bg-ink/5 hover:text-ink"
               >
