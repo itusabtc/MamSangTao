@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
 import { DrawingCanvas } from '@/components/drawing-canvas'
 import { StoryStudio } from '@/components/story-studio'
-import { CodingStudio, GAME_OPTIONS, type GameChoice } from '@/components/coding-studio'
+import { CodingStudio, GAME_OPTIONS, gameFromIdea, type GameChoice } from '@/components/coding-studio'
+import { promptsFor } from '@/components/prompt-ideas'
 
 type Mode = 'tranh' | 'truyen' | 'laptrinh'
 type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'coding-editor'
@@ -41,9 +42,11 @@ export function StudioDemo() {
 
   useEffect(() => {
     const fromUrl = params.get('idea')
+    const toolFromUrl = params.get('tool') as Mode | null
     if (!fromUrl) return
     const update = window.setTimeout(() => {
       setIdea(fromUrl)
+      if (toolFromUrl && MODES.some((item) => item.id === toolFromUrl)) setMode(toolFromUrl)
       setPhase('form')
       document.getElementById('idea-input')?.focus()
     }, 0)
@@ -186,6 +189,7 @@ export function StudioDemo() {
         <form onSubmit={startProject} className="mt-5">
           <label htmlFor="idea-input" className="mb-2 block text-sm font-extrabold">Ý tưởng của bé</label>
           <textarea id="idea-input" value={idea} onChange={(event) => setIdea(event.target.value)} rows={3} required placeholder="Ví dụ: một chú cá voi bay giữa những vì sao…" className="field resize-none" />
+          <fieldset className="mt-4"><legend className="text-sm font-extrabold">Gợi ý cho bé</legend><div className="mt-2 flex flex-wrap gap-2">{promptsFor(mode).map((prompt) => <button key={prompt} type="button" onClick={() => { setIdea(prompt); if (mode === 'laptrinh') setCodingGame(gameFromIdea(prompt)); document.getElementById('idea-input')?.focus() }} className="min-h-10 rounded-full border border-hairline bg-cream px-3 py-2 text-left text-sm font-bold text-ink hover:border-coral hover:text-blue">{prompt}</button>)}</div></fieldset>
           {mode === 'tranh' ? <fieldset className="mt-5"><legend className="text-sm font-extrabold">Chọn phong cách</legend><div className="mt-2 flex flex-wrap gap-2">{STYLES.map((item) => <button key={item} type="button" onClick={() => setStyle(item)} aria-pressed={style === item} className={`min-h-11 rounded-full px-4 text-sm font-bold ${style === item ? 'bg-violet text-white' : 'bg-cream text-ink/70 hover:text-blue'}`}>{item}</button>)}</div></fieldset> : null}
           {mode === 'truyen' ? <div className="mt-5 grid gap-3 sm:grid-cols-3"><label className="text-sm font-extrabold">Nhân vật<input value={storyCharacter} onChange={(event) => setStoryCharacter(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Bối cảnh<input value={storySetting} onChange={(event) => setStorySetting(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Giọng kể<select value={storyTone} onChange={(event) => setStoryTone(event.target.value)} className="field mt-2"><option>ấm áp</option><option>hài hước</option><option>phiêu lưu</option><option>bí ẩn</option></select></label></div> : null}
           {mode === 'laptrinh' ? <fieldset className="mt-5"><legend className="text-sm font-extrabold">Chọn loại game sẽ mở</legend><div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"><button type="button" onClick={() => setCodingGame('auto')} aria-pressed={codingGame === 'auto'} className={`min-h-12 rounded-xl px-3 text-left text-sm font-extrabold ${codingGame === 'auto' ? 'bg-blue text-white' : 'bg-cream text-ink'}`}>✨ Tự nhận diện từ ý tưởng</button>{GAME_OPTIONS.map((game) => <button key={game.id} type="button" onClick={() => setCodingGame(game.id)} aria-pressed={codingGame === game.id} className={`min-h-12 rounded-xl px-3 text-left text-sm font-extrabold ${codingGame === game.id ? 'bg-blue text-white' : 'bg-cream text-ink'}`}>{game.icon} {game.label}</button>)}</div><p className="mt-2 text-xs text-ink/55">Game đã chọn sẽ mở trực tiếp; bé vẫn có thể đổi loại trong xưởng.</p></fieldset> : null}
