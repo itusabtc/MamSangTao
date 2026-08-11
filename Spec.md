@@ -38,7 +38,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 5. Hiển thị lần lượt các trạng thái: gom ý tưởng → pha màu → hoàn thiện.
 6. Hiển thị bốn phương án minh họa prototype, có trạng thái được chọn rõ ràng.
 7. Cho phép: chọn tranh, đổi phong cách, tạo lại, mở bàn vẽ và tải bản mẫu.
-8. Trong bàn vẽ, người dùng có thể dùng cọ/tẩy, hoàn tác, thêm/chọn/kéo thả/xóa sticker, khôi phục mẫu và tải PNG.
+8. Bàn vẽ mở toàn màn hình và focus đúng đầu công cụ; người dùng có thể thu nhỏ/phóng to, dùng cọ/tẩy, hoàn tác, thêm/chọn/kéo thả/xóa sticker, khôi phục mẫu và tải PNG.
 9. Mọi thao tác prototype phải giải thích rõ rằng đây chưa phải ảnh AI thật.
 
 ## 5. Yêu cầu UX
@@ -75,6 +75,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Mobile menu mở/đóng được, đóng khi chọn liên kết và có thuộc tính accessibility.
 - [x] Luồng Tranh có input, style, loading, bốn kết quả và hành động tiếp theo.
 - [x] Bàn vẽ canvas hỗ trợ chuột/cảm ứng, cọ màu, tẩy, hoàn tác, kéo thả sticker và tải PNG.
+- [x] Bàn vẽ mở toàn màn hình, khóa cuộn nền, focus đúng đầu công cụ và có nút thu nhỏ/phóng to.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.

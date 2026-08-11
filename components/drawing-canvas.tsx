@@ -1,6 +1,6 @@
 'use client'
 
-import { Download, Eraser, Paintbrush, RotateCcw, Trash2, Undo2, X } from 'lucide-react'
+import { Download, Eraser, Maximize2, Minimize2, Paintbrush, RotateCcw, Trash2, Undo2, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 
 type Props = {
@@ -17,6 +17,7 @@ const PALETTE = ['#1d3150', '#294d9b', '#f47d61', '#f5c34d', '#64aa82', '#8a73c9
 const STICKERS = ['⭐', '☁️', '🌈', '🌸', '🚀', '🐱']
 
 export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) {
+  const sectionRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasWrapRef = useRef<HTMLDivElement>(null)
   const drawing = useRef(false)
@@ -28,6 +29,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   const [eraser, setEraser] = useState(false)
   const [stickers, setStickers] = useState<StickerItem[]>([])
   const [selectedSticker, setSelectedSticker] = useState<number | null>(null)
+  const [fullscreen, setFullscreen] = useState(true)
   const [status, setStatus] = useState('Bàn vẽ đã sẵn sàng.')
 
   const saveHistory = useCallback(() => {
@@ -66,6 +68,21 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   }, [colors, idea, style, subject])
 
   useEffect(() => { drawTemplate() }, [drawTemplate])
+
+  useEffect(() => {
+    const heading = document.getElementById('drawing-title')
+    const frame = window.requestAnimationFrame(() => {
+      sectionRef.current?.scrollIntoView({ block: 'start' })
+      heading?.focus({ preventScroll: true })
+    })
+    if (!fullscreen) return () => window.cancelAnimationFrame(frame)
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.cancelAnimationFrame(frame)
+      document.body.style.overflow = previousOverflow
+    }
+  }, [fullscreen])
 
   function point(event: ReactPointerEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current!
@@ -180,10 +197,16 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   }
 
   return (
-    <section className="mt-7" aria-labelledby="drawing-title">
-      <div className="flex items-start justify-between gap-4">
-        <div><p className="kicker">Bàn vẽ của bé</p><h3 id="drawing-title" className="mt-2 text-2xl">Tô điểm ý tưởng của riêng mình</h3></div>
-        <button type="button" onClick={onClose} aria-label="Đóng bàn vẽ" className="grid h-11 w-11 place-items-center rounded-full border border-hairline"><X className="h-5 w-5" /></button>
+    <section ref={sectionRef} className={fullscreen ? 'fixed inset-0 z-[100] overflow-y-auto bg-[#eef5ef] p-3 sm:p-6' : 'mt-7 scroll-mt-24'} aria-labelledby="drawing-title" aria-modal={fullscreen || undefined} role={fullscreen ? 'dialog' : undefined}>
+      <div className={fullscreen ? 'mx-auto max-w-7xl rounded-3xl border border-hairline bg-white p-4 shadow-2xl sm:p-6' : ''}>
+      <div className={`flex items-start justify-between gap-4 ${fullscreen ? 'sticky top-0 z-20 -mx-2 -mt-2 rounded-2xl bg-white/95 p-2 backdrop-blur' : ''}`}>
+        <div><p className="kicker">Bàn vẽ của bé</p><h3 id="drawing-title" tabIndex={-1} className="mt-2 text-2xl outline-none">Tô điểm ý tưởng của riêng mình</h3></div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => setFullscreen((value) => !value)} aria-label={fullscreen ? 'Thu nhỏ bàn vẽ' : 'Phóng to bàn vẽ'} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline px-3 text-sm font-extrabold">
+            {fullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}<span className="hidden sm:inline">{fullscreen ? 'Thu nhỏ' : 'Phóng to'}</span>
+          </button>
+          <button type="button" onClick={onClose} aria-label="Đóng bàn vẽ" className="grid h-11 w-11 place-items-center rounded-full border border-hairline"><X className="h-5 w-5" /></button>
+        </div>
       </div>
       <div className="mt-5 grid gap-4 lg:grid-cols-[190px_1fr]">
         <div className="rounded-2xl bg-cream p-4">
@@ -224,6 +247,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
           </div>
           <p className="mt-3 text-sm text-ink/60" role="status" aria-live="polite">{status} Tranh được xử lý trên thiết bị, không tự động tải lên mạng.</p>
         </div>
+      </div>
       </div>
     </section>
   )
