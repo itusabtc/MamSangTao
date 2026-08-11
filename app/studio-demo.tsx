@@ -86,6 +86,16 @@ export function StudioDemo() {
     setNotice('')
   }
 
+  function closeEditor() {
+    document.body.style.removeProperty('overflow')
+    setPhase('results')
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      const selectedCard = document.getElementById(`artwork-option-${selected}`)
+      selectedCard?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      selectedCard?.focus({ preventScroll: true })
+    }))
+  }
+
   function downloadPrototype() {
     const canvas = document.createElement('canvas')
     canvas.width = 1200
@@ -140,7 +150,7 @@ export function StudioDemo() {
           </div>
         </div>
       ) : phase === 'editor' ? (
-        <DrawingCanvas idea={idea} style={style} colors={CARD_COLORS[selected]} subject={['🚀', '🐋', '🏰', '🐱'][selected]} onClose={() => setPhase('results')} />
+        <DrawingCanvas idea={idea} style={style} colors={CARD_COLORS[selected]} subject={['🚀', '🐋', '🏰', '🐱'][selected]} onClose={closeEditor} />
       ) : phase === 'results' ? (
         <div className="mt-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -150,7 +160,7 @@ export function StudioDemo() {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {CARD_COLORS.map((colors, index) => (
-              <button key={index} type="button" onClick={() => { setSelected(index); setNotice('') }} aria-pressed={selected === index} className={`group overflow-hidden rounded-2xl border-2 bg-surface text-left transition-all hover:-translate-y-1 ${selected === index ? 'border-blue shadow-lg' : 'border-hairline'}`}>
+              <button id={`artwork-option-${index}`} key={index} type="button" onClick={() => { setSelected(index); setNotice('') }} aria-pressed={selected === index} className={`group scroll-mt-28 overflow-hidden rounded-2xl border-2 bg-surface text-left transition-all hover:-translate-y-1 focus-visible:ring-4 focus-visible:ring-blue/30 ${selected === index ? 'border-blue shadow-lg' : 'border-hairline'}`}>
                 <span className="relative block aspect-[4/3] overflow-hidden" style={{ backgroundColor: colors[0] }}>
                   <span className="absolute right-[12%] top-[12%] h-12 w-12 rounded-full bg-yellow" />
                   <span className="absolute -bottom-[28%] -left-[15%] h-[70%] w-[75%] rounded-[50%]" style={{ backgroundColor: colors[1] }} />

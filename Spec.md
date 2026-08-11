@@ -76,6 +76,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Luồng Tranh có input, style, loading, bốn kết quả và hành động tiếp theo.
 - [x] Bàn vẽ canvas hỗ trợ chuột/cảm ứng, cọ màu, tẩy, hoàn tác, kéo thả sticker và tải PNG.
 - [x] Bàn vẽ mở toàn màn hình, khóa cuộn nền, focus đúng đầu công cụ và có nút thu nhỏ/phóng to.
+- [x] Khi đóng bàn vẽ, cuộn nền được khôi phục và focus quay lại đúng phương án tranh đang chọn.
 - [x] Tiêu đề, dòng phụ, màu chữ, ba vùng nền và vị trí các icon mẫu đều chỉnh sửa độc lập.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
