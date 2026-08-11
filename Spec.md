@@ -55,10 +55,11 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 ### Luồng Lập trình
 
 1. Nhập nhiệm vụ rồi mở xưởng khối lệnh.
-2. Bấm hoặc kéo các khối di chuyển, xoay, nói và đổi màu vào chương trình.
+2. Bấm hoặc kéo các khối di chuyển, xoay, nói, phát nốt nhạc và đổi màu vào chương trình.
 3. Sắp xếp bằng kéo thả hoặc nút lên/xuống; cho phép xóa từng khối hoặc toàn bộ.
 4. Chạy tuần tự trên sân khấu, tô sáng khối hiện tại, dừng và đặt lại trạng thái.
 5. Hỗ trợ toàn màn hình, khôi phục mẫu và tải dự án JSON cục bộ.
+6. Chế độ Game cho phép điều khiển nhân vật bằng phím mũi tên, thu thập sao, tính điểm và bật/tắt nhạc nền tạo bằng Web Audio.
 
 - Mobile-first; vùng bấm tối thiểu 44px.
 - Dưới 901px phải có menu điều hướng thay thế nav desktop.
@@ -99,6 +100,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Trang truyện mới có gợi ý theo mạch truyện; xưởng hỗ trợ phóng to/thu nhỏ.
 - [x] Có sinh bộ gợi ý khác và chế độ Truyện tranh với khung tự vẽ riêng từng trang.
 - [x] Xưởng Lập trình có palette khối, vùng chương trình, chạy thử sân khấu và tải JSON.
+- [x] Có chế độ Game, tính điểm, điều khiển bàn phím, nhạc nền và khối phát âm thanh.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.
