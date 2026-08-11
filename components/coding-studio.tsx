@@ -38,6 +38,45 @@ function themeFromIdea(idea: string) {
   return { actor: '🐱', item: '⭐', sky: '#eaf3ff', ground: '#dff0e5', label: 'khu vườn' }
 }
 
+type GameTheme = ReturnType<typeof themeFromIdea>
+
+function characterOptions(theme: GameTheme, gameType: GameType) {
+  const context = theme.label
+
+  if (gameType === 'race') {
+    if (context.includes('vũ trụ')) return ['🚀', '🛸', '🛰️']
+    if (context.includes('đại dương')) return ['🚤', '⛵', '🐬']
+    if (context.includes('tiền sử')) return ['🦕', '🦖', '🏎️']
+    if (context.includes('phép thuật')) return ['🦄', '🐉', '🧹']
+    return ['🏎️', '🚗', '🚲', '🏍️']
+  }
+
+  if (gameType === 'flappy') {
+    if (context.includes('vũ trụ')) return ['🚀', '🛸', '🛰️']
+    if (context.includes('đại dương')) return ['🐠', '🐬', '🦈']
+    if (context.includes('tiền sử')) return ['🦅', '🐉', '🦕']
+    if (context.includes('phép thuật')) return ['🐉', '🧚', '🦄']
+    if (context.includes('rừng')) return ['🐦', '🦋', '🐝', '🦉']
+    return ['🐦', '🦋', '🐝', '🐉']
+  }
+
+  if (gameType === 'runner') {
+    if (context.includes('vũ trụ')) return ['👨‍🚀', '🤖', '🚀']
+    if (context.includes('đại dương')) return ['🐬', '🐢', '🦀']
+    if (context.includes('tiền sử')) return ['🦕', '🦖', '🐊']
+    if (context.includes('phép thuật')) return ['🧙', '🦄', '🐉']
+    if (context.includes('rừng')) return ['🐿️', '🐇', '🦊', '🦔']
+    return ['🐱', '🐶', '🐰', '🦊']
+  }
+
+  if (context.includes('vũ trụ')) return ['👨‍🚀', '🤖', '🚀', '👽']
+  if (context.includes('đại dương')) return ['🐠', '🐬', '🐢', '🦀']
+  if (context.includes('tiền sử')) return ['🦕', '🦖', '🐊']
+  if (context.includes('phép thuật')) return ['🧙', '🧚', '🦄', '🐉']
+  if (context.includes('rừng')) return ['🐿️', '🐇', '🦊', '🦉']
+  return ['🐱', '🐶', '🐰', '🐻']
+}
+
 const PALETTE: Omit<Command, 'id'>[] = [
   { type: 'move', label: 'Đi tới 20 bước', color: '#3158a8' },
   { type: 'back', label: 'Lùi lại 20 bước', color: '#3158a8' },
@@ -50,6 +89,8 @@ const PALETTE: Omit<Command, 'id'>[] = [
 ]
 
 export function CodingStudio({ idea, initialGame, onReset }: Props) {
+  const initialTheme = themeFromIdea(idea)
+  const resolvedInitialGame = initialGame === 'auto' ? gameFromIdea(idea) : initialGame
   const sectionRef = useRef<HTMLElement>(null)
   const nextId = useRef(3)
   const runToken = useRef(0)
@@ -69,10 +110,12 @@ export function CodingStudio({ idea, initialGame, onReset }: Props) {
   const [musicOn, setMusicOn] = useState(false)
   const [score, setScore] = useState(0)
   const [star, setStar] = useState({ x: 72, y: 55 })
-  const [gameType, setGameType] = useState<GameType>(() => initialGame === 'auto' ? gameFromIdea(idea) : initialGame)
+  const [gameType, setGameType] = useState<GameType>(resolvedInitialGame)
+  const [selectedActor, setSelectedActor] = useState(() => characterOptions(initialTheme, resolvedInitialGame)[0])
   const [pipeX, setPipeX] = useState(88)
   const [gapY, setGapY] = useState(48)
   const theme = useMemo(() => themeFromIdea(idea), [idea])
+  const availableCharacters = useMemo(() => characterOptions(theme, gameType), [theme, gameType])
   const goalIcon = gameType === 'flappy' ? '' : gameType === 'race' || gameType === 'runner' ? '🏁' : gameType === 'treasure' ? '🧰' : gameType === 'maze' ? '🗝️' : theme.item
 
   const playTone = useCallback((frequency = 523, duration = 0.22) => {
@@ -197,14 +240,14 @@ export function CodingStudio({ idea, initialGame, onReset }: Props) {
       <div className={fullscreen ? 'mx-auto max-w-7xl rounded-3xl border border-hairline bg-white p-4 shadow-2xl sm:p-6' : ''}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"><div><p className="kicker">Xưởng lập trình</p><h3 id="coding-title" tabIndex={-1} className="mt-2 text-2xl outline-none">Ghép khối lệnh, tạo hoạt cảnh và game</h3><p className="mt-1 text-sm text-ink/60">Nhiệm vụ: {idea}</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => { setGameMode((value) => !value); setScore(0); resetStage() }} className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-extrabold ${gameMode ? 'border-blue bg-blue text-white' : 'border-hairline'}`}><Gamepad2 className="h-4 w-4" />{gameMode ? 'Tắt game' : 'Chế độ game'}</button><button type="button" onClick={toggleMusic} className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-extrabold ${musicOn ? 'border-violet bg-violet text-white' : 'border-hairline'}`}>{musicOn ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}{musicOn ? 'Tắt nhạc' : 'Bật nhạc'}</button><button type="button" onClick={() => setFullscreen((value) => !value)} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline px-4 text-sm font-extrabold">{fullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}{fullscreen ? 'Thu nhỏ' : 'Phóng to'}</button></div></div>
 
-        {gameMode ? <div className="mt-4 rounded-2xl bg-green-soft p-3"><div className="flex flex-col gap-2 sm:flex-row sm:items-center"><p className="text-sm font-extrabold">Chọn loại game:</p><div className="flex flex-wrap gap-2">{GAME_OPTIONS.map((game) => <button key={game.id} type="button" onClick={() => { setGameType(game.id); setScore(0); setStar({ x: 72, y: 55 }); setPipeX(88); setPosition({ x: 25, y: game.id === 'flappy' ? 48 : 62, rotation: 0 }) }} aria-pressed={gameType === game.id} className={`min-h-10 rounded-full px-3 text-sm font-bold ${gameType === game.id ? 'bg-blue text-white' : 'bg-white text-ink'}`}>{game.icon} {game.label}</button>)}</div></div><p className="mt-2 text-xs text-ink/60">Prompt được nhận diện theo chủ đề <strong>{theme.label}</strong>; bé vẫn có thể đổi loại game ở đây.</p></div> : null}
+        {gameMode ? <div className="mt-4 rounded-2xl bg-green-soft p-3"><div className="flex flex-col gap-2 sm:flex-row sm:items-center"><p className="text-sm font-extrabold">Chọn loại game:</p><div className="flex flex-wrap gap-2">{GAME_OPTIONS.map((game) => <button key={game.id} type="button" onClick={() => { setGameType(game.id); setSelectedActor(characterOptions(theme, game.id)[0]); setScore(0); setStar({ x: 72, y: 55 }); setPipeX(88); setPosition({ x: 25, y: game.id === 'flappy' ? 48 : 62, rotation: 0 }) }} aria-pressed={gameType === game.id} className={`min-h-10 rounded-full px-3 text-sm font-bold ${gameType === game.id ? 'bg-blue text-white' : 'bg-white text-ink'}`}>{game.icon} {game.label}</button>)}</div></div><p className="mt-2 text-xs text-ink/60">Prompt được nhận diện theo chủ đề <strong>{theme.label}</strong>; bé vẫn có thể đổi loại game ở đây.</p><div className="mt-3 border-t border-ink/10 pt-3"><p className="text-sm font-extrabold">Chọn nhân vật phù hợp:</p><div className="mt-2 flex flex-wrap gap-2">{availableCharacters.map((actor) => <button key={actor} type="button" onClick={() => setSelectedActor(actor)} aria-pressed={selectedActor === actor} aria-label={`Chọn nhân vật ${actor}`} className={`flex min-h-12 min-w-12 items-center justify-center rounded-2xl border-2 text-2xl transition ${selectedActor === actor ? 'border-blue bg-white shadow-sm' : 'border-transparent bg-white/70 hover:border-blue/30'}`}>{actor}</button>)}</div><p className="mt-2 text-xs text-ink/60">Các nhân vật đã được lọc theo <strong>{theme.label}</strong> và luật chơi <strong>{GAME_OPTIONS.find((game) => game.id === gameType)?.label}</strong>.</p></div></div> : null}
 
         <div className="mt-5 grid gap-4 lg:grid-cols-[210px_1fr_1fr]">
           <aside className="rounded-2xl bg-cream p-3"><p className="text-sm font-extrabold">Khối lệnh</p><p className="mt-1 text-xs text-ink/55">Bấm hoặc kéo sang chương trình.</p><div className="mt-3 space-y-2">{PALETTE.map((block) => <button key={block.type} type="button" draggable onDragStart={(event) => event.dataTransfer.setData('application/x-block', block.type)} onClick={() => add(block.type)} className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-extrabold text-white shadow-sm" style={{ backgroundColor: block.color }}><Plus className="h-4 w-4" />{block.label}</button>)}</div></aside>
 
           <div className="rounded-2xl border-2 border-dashed border-blue/25 bg-blue/5 p-3" onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropOn(event)}><div className="flex items-center justify-between"><p className="text-sm font-extrabold">Chương trình của bé</p><button type="button" onClick={() => setCommands([])} className="text-xs font-bold text-coral">Xóa hết</button></div><div className="mt-3 min-h-72 space-y-2">{commands.length === 0 ? <p className="rounded-xl bg-white p-5 text-center text-sm text-ink/50">Kéo hoặc bấm một khối lệnh để bắt đầu.</p> : commands.map((command, index) => <div key={command.id} draggable onDragStart={() => setDraggedId(command.id)} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropOn(event, index)} className={`flex items-center gap-2 rounded-xl p-2 text-white shadow-sm ${activeId === command.id ? 'ring-4 ring-yellow' : ''}`} style={{ backgroundColor: command.color }}><span className="min-w-6 text-center text-xs font-black">{index + 1}</span><span className="flex-1 text-sm font-extrabold">{command.label}</span><button type="button" onClick={() => moveBlock(index, -1)} aria-label="Đưa khối lên" className="grid h-9 w-9 place-items-center rounded-lg bg-white/20"><ArrowUp className="h-4 w-4" /></button><button type="button" onClick={() => moveBlock(index, 1)} aria-label="Đưa khối xuống" className="grid h-9 w-9 place-items-center rounded-lg bg-white/20"><ArrowDown className="h-4 w-4" /></button><button type="button" onClick={() => setCommands((items) => items.filter((item) => item.id !== command.id))} aria-label="Xóa khối" className="grid h-9 w-9 place-items-center rounded-lg bg-white/20"><Trash2 className="h-4 w-4" /></button></div>)}</div></div>
 
-          <div><button type="button" className="relative aspect-[4/3] w-full text-left overflow-hidden rounded-2xl border-2 border-hairline transition-colors" style={{ backgroundColor: stageColor }} tabIndex={gameMode ? 0 : undefined} aria-label={gameMode ? 'Sân khấu game. Dùng phím mũi tên để di chuyển.' : 'Sân khấu lập trình'}><div className="absolute bottom-0 h-[28%] w-full" style={{ backgroundColor: theme.ground }} /><div className="absolute right-[10%] top-[10%] h-14 w-14 rounded-full bg-yellow" />{gameMode ? <><div className="absolute left-3 top-3 z-10 rounded-full bg-white px-3 py-1 text-sm font-extrabold shadow">⭐ Điểm: {score}</div><div className="absolute text-4xl transition-all" style={{ left: `${star.x}%`, top: `${star.y}%`, transform: 'translate(-50%, -50%)' }}>{goalIcon}</div>{gameType === 'runner' ? <><div className="absolute bottom-[24%] left-[45%] text-4xl">🪨</div><div className="absolute bottom-[24%] left-[68%] text-4xl">🪵</div></> : null}{gameType === 'flappy' ? <><div className="absolute w-[13%] bg-green" style={{ left: `${pipeX}%`, top: 0, height: `${gapY - 18}%` }} /><div className="absolute bottom-0 w-[13%] bg-green" style={{ left: `${pipeX}%`, height: `${82 - gapY}%` }} /></> : null}</> : null}{speech ? <div className="absolute z-10 max-w-[55%] rounded-2xl bg-white px-3 py-2 text-sm font-bold shadow-lg" style={{ left: `${Math.min(65, position.x + 8)}%`, top: `${Math.max(4, position.y - 22)}%` }}>{speech}</div> : null}<div className="absolute text-6xl transition-all duration-200" style={{ left: `${position.x}%`, top: `${position.y}%`, transform: `translate(-50%, -50%) rotate(${position.rotation}deg)` }}>{theme.actor}</div></button><div className="mt-3 grid grid-cols-2 gap-2"><button type="button" disabled={running || commands.length === 0} onClick={run} className="btn btn-primary justify-center disabled:opacity-40"><Play className="h-4 w-4" />Chạy</button><button type="button" onClick={resetStage} className="btn justify-center border border-hairline bg-white"><Square className="h-4 w-4" />Dừng</button></div><p className="mt-3 text-xs text-ink/55" role="status">{gameMode ? gameType === 'flappy' ? 'Bay qua cổng: bấm Space hoặc ↑ để bay lên.' : gameType === 'runner' ? 'Vượt chướng ngại: dùng ← → và Space để nhảy.' : `Game ${GAME_OPTIONS.find((game) => game.id === gameType)?.label}: dùng phím mũi tên điều khiển ${theme.actor}.` : running ? 'Đang chạy từng khối lệnh được tô sáng…' : 'Sân khấu sẵn sàng. Bấm Chạy để xem kết quả.'}</p></div>
+          <div><button type="button" className="relative aspect-[4/3] w-full text-left overflow-hidden rounded-2xl border-2 border-hairline transition-colors" style={{ backgroundColor: stageColor }} tabIndex={gameMode ? 0 : undefined} aria-label={gameMode ? 'Sân khấu game. Dùng phím mũi tên để di chuyển.' : 'Sân khấu lập trình'}><div className="absolute bottom-0 h-[28%] w-full" style={{ backgroundColor: theme.ground }} /><div className="absolute right-[10%] top-[10%] h-14 w-14 rounded-full bg-yellow" />{gameMode ? <><div className="absolute left-3 top-3 z-10 rounded-full bg-white px-3 py-1 text-sm font-extrabold shadow">⭐ Điểm: {score}</div><div className="absolute text-4xl transition-all" style={{ left: `${star.x}%`, top: `${star.y}%`, transform: 'translate(-50%, -50%)' }}>{goalIcon}</div>{gameType === 'runner' ? <><div className="absolute bottom-[24%] left-[45%] text-4xl">🪨</div><div className="absolute bottom-[24%] left-[68%] text-4xl">🪵</div></> : null}{gameType === 'flappy' ? <><div className="absolute w-[13%] bg-green" style={{ left: `${pipeX}%`, top: 0, height: `${gapY - 18}%` }} /><div className="absolute bottom-0 w-[13%] bg-green" style={{ left: `${pipeX}%`, height: `${82 - gapY}%` }} /></> : null}</> : null}{speech ? <div className="absolute z-10 max-w-[55%] rounded-2xl bg-white px-3 py-2 text-sm font-bold shadow-lg" style={{ left: `${Math.min(65, position.x + 8)}%`, top: `${Math.max(4, position.y - 22)}%` }}>{speech}</div> : null}<div className="absolute text-6xl transition-all duration-200" style={{ left: `${position.x}%`, top: `${position.y}%`, transform: `translate(-50%, -50%) rotate(${position.rotation}deg)` }}>{selectedActor}</div></button><div className="mt-3 grid grid-cols-2 gap-2"><button type="button" disabled={running || commands.length === 0} onClick={run} className="btn btn-primary justify-center disabled:opacity-40"><Play className="h-4 w-4" />Chạy</button><button type="button" onClick={resetStage} className="btn justify-center border border-hairline bg-white"><Square className="h-4 w-4" />Dừng</button></div><p className="mt-3 text-xs text-ink/55" role="status">{gameMode ? gameType === 'flappy' ? `Bay qua cổng cùng ${selectedActor}: bấm Space hoặc ↑ để bay lên.` : gameType === 'runner' ? `Vượt chướng ngại cùng ${selectedActor}: dùng ← → và Space để nhảy.` : `Game ${GAME_OPTIONS.find((game) => game.id === gameType)?.label}: dùng phím mũi tên điều khiển ${selectedActor}.` : running ? 'Đang chạy từng khối lệnh được tô sáng…' : 'Sân khấu sẵn sàng. Bấm Chạy để xem kết quả.'}</p></div>
         </div>
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row"><button type="button" onClick={download} className="btn btn-primary justify-center"><Download className="h-4 w-4" />Tải dự án JSON</button><button type="button" onClick={() => { setCommands([{ id: nextId.current++, ...PALETTE[0] }, { id: nextId.current++, ...PALETTE[5] }]); resetStage() }} className="btn justify-center border border-hairline bg-white"><RotateCcw className="h-4 w-4" />Khôi phục mẫu</button><button type="button" onClick={onReset} className="btn justify-center text-ink/70 sm:ml-auto">Ý tưởng khác</button></div>
