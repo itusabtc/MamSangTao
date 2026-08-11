@@ -5,9 +5,10 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
 import { DrawingCanvas } from '@/components/drawing-canvas'
 import { StoryStudio } from '@/components/story-studio'
+import { CodingStudio } from '@/components/coding-studio'
 
 type Mode = 'tranh' | 'truyen' | 'laptrinh'
-type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'simple-result'
+type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'coding-editor'
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: 'tranh', label: 'Tranh', icon: '🎨' },
@@ -24,14 +25,6 @@ const CARD_COLORS = [
   ['#f1eafa', '#64aa82', '#294d9b'],
 ] as const
 
-const SIMPLE_RESULTS: Record<'laptrinh', (idea: string) => { title: string; body: string; emoji: string }> = {
-  laptrinh: (idea) => ({
-    emoji: '🧩',
-    title: 'Bảng xếp khối lệnh đã bày ra!',
-    body: `Để thực hiện “${idea}”, bé sẽ kéo thả các khối lệnh cho nhân vật di chuyển và phản ứng. Blockly thật sẽ được kết nối trong giai đoạn tiếp theo.`,
-  }),
-}
-
 export function StudioDemo() {
   const params = useSearchParams()
   const [mode, setMode] = useState<Mode>('tranh')
@@ -40,7 +33,6 @@ export function StudioDemo() {
   const [phase, setPhase] = useState<Phase>('form')
   const [loadingStep, setLoadingStep] = useState(0)
   const [selected, setSelected] = useState(0)
-  const [simpleResult, setSimpleResult] = useState<{ title: string; body: string; emoji: string } | null>(null)
   const [notice, setNotice] = useState('')
   const [storyCharacter, setStoryCharacter] = useState('chú mèo Mít')
   const [storySetting, setStorySetting] = useState('khu vườn trên mây')
@@ -77,8 +69,7 @@ export function StudioDemo() {
     } else if (mode === 'truyen') {
       setPhase('story-editor')
     } else {
-      setSimpleResult(SIMPLE_RESULTS.laptrinh(trimmed))
-      setPhase('simple-result')
+      setPhase('coding-editor')
     }
   }
 
@@ -154,6 +145,8 @@ export function StudioDemo() {
         <DrawingCanvas idea={idea} style={style} colors={CARD_COLORS[selected]} subject={['🚀', '🐋', '🏰', '🐱'][selected]} onClose={closeEditor} />
       ) : phase === 'story-editor' ? (
         <StoryStudio idea={idea} character={storyCharacter} setting={storySetting} tone={storyTone} onReset={reset} />
+      ) : phase === 'coding-editor' ? (
+        <CodingStudio idea={idea} onReset={reset} />
       ) : phase === 'results' ? (
         <div className="mt-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -184,8 +177,6 @@ export function StudioDemo() {
           </div>
           {notice ? <p className="mt-4 rounded-xl bg-green-soft px-4 py-3 text-sm font-bold text-ink" role="status">{notice}</p> : null}
         </div>
-      ) : phase === 'simple-result' && simpleResult ? (
-        <div className="mt-6 rounded-2xl bg-green-soft p-6"><div className="text-4xl">{simpleResult.emoji}</div><h3 className="mt-3 text-xl">{simpleResult.title}</h3><p className="mt-2 text-ink/75">{simpleResult.body}</p><button type="button" onClick={reset} className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/20 bg-white px-4 text-sm font-extrabold"><RotateCcw className="h-4 w-4" />Làm lại</button></div>
       ) : (
         <form onSubmit={startProject} className="mt-5">
           <label htmlFor="idea-input" className="mb-2 block text-sm font-extrabold">Ý tưởng của bé</label>
