@@ -47,8 +47,9 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 
 1. Nhập ý tưởng, nhân vật, bối cảnh và chọn giọng kể.
 2. Tạo bản nháp bốn trang cục bộ, giải thích rõ chưa dùng AI.
-3. Cho phép sửa tên truyện và nội dung từng trang, thêm/xóa/chuyển trang.
+3. Cho phép sửa tên truyện và nội dung từng trang, thêm/xóa/chuyển trang; trang mới có nội dung mở đầu và nhóm gợi ý viết tiếp theo ngữ cảnh.
 4. Hiển thị số trang, số từ và cho phép tải toàn bộ truyện dạng TXT.
+5. Xưởng Truyện có chế độ phóng to toàn màn hình và thu nhỏ mà không mất nội dung.
 
 - Mobile-first; vùng bấm tối thiểu 44px.
 - Dưới 901px phải có menu điều hướng thay thế nav desktop.
@@ -86,6 +87,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Khi đóng bàn vẽ, cuộn nền được khôi phục và focus quay lại đúng phương án tranh đang chọn.
 - [x] Tiêu đề, dòng phụ, màu chữ, ba vùng nền và vị trí các icon mẫu đều chỉnh sửa độc lập.
 - [x] Luồng Truyện có cấu hình đầu vào, bản nháp nhiều trang, trình sửa trang và tải TXT.
+- [x] Trang truyện mới có gợi ý theo mạch truyện; xưởng hỗ trợ phóng to/thu nhỏ.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
 - [x] Build production thành công.

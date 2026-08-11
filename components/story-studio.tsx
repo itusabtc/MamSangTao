@@ -1,7 +1,7 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Download, Plus, RotateCcw, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { ChevronLeft, ChevronRight, Download, Maximize2, Minimize2, Plus, RotateCcw, Sparkles, Trash2 } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 type Props = { idea: string; character: string; setting: string; tone: string; onReset: () => void }
 type Page = { id: number; text: string; emoji: string; color: string }
@@ -23,12 +23,35 @@ function initialPages(idea: string, character: string, setting: string, tone: st
   return texts.map((text, index) => ({ id: index + 1, text, ...PAGE_LOOKS[index] }))
 }
 
+function pageSuggestions(character: string, setting: string, tone: string, pageNumber: number) {
+  return [
+    { label: 'Gặp bạn mới', text: `Ở ${setting}, ${character} gặp một người bạn mới đang cần giúp đỡ. Cả hai quyết định đồng hành và chia sẻ những điều mình biết.` },
+    { label: 'Thử thách bất ngờ', text: `Ngay lúc ấy, một thử thách bất ngờ chặn đường. ${character} quan sát thật kỹ, thử nhiều cách và không bỏ cuộc.` },
+    { label: 'Phát hiện bí mật', text: `${character} phát hiện một dấu hiệu bí mật chưa ai để ý. Manh mối ấy dẫn tới một nơi kỳ diệu nằm sâu trong ${setting}.` },
+    { label: pageNumber > 4 ? 'Đi tới kết thúc' : 'Một cú ngoặt', text: `Điều tưởng là khó khăn lại trở thành cơ hội. ${character} nảy ra một ý tưởng ${tone}, giúp mọi người cùng tiến gần hơn tới kết thúc đẹp.` },
+  ]
+}
+
 export function StoryStudio({ idea, character, setting, tone, onReset }: Props) {
+  const sectionRef = useRef<HTMLElement>(null)
   const [title, setTitle] = useState(`Chuyện của ${character}`)
   const [pages, setPages] = useState(() => initialPages(idea, character, setting, tone))
   const [current, setCurrent] = useState(0)
+  const [fullscreen, setFullscreen] = useState(false)
   const page = pages[current]
   const wordCount = useMemo(() => pages.reduce((total, item) => total + item.text.trim().split(/\s+/).filter(Boolean).length, 0), [pages])
+  const suggestions = useMemo(() => pageSuggestions(character, setting, tone, current + 1), [character, current, setting, tone])
+
+  useEffect(() => {
+    if (!fullscreen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const frame = window.requestAnimationFrame(() => {
+      sectionRef.current?.scrollTo({ top: 0 })
+      document.getElementById('story-studio-title')?.focus({ preventScroll: true })
+    })
+    return () => { document.body.style.overflow = previousOverflow; window.cancelAnimationFrame(frame) }
+  }, [fullscreen])
 
   function updatePage(text: string) {
     setPages((items) => items.map((item, index) => index === current ? { ...item, text } : item))
@@ -36,7 +59,8 @@ export function StoryStudio({ idea, character, setting, tone, onReset }: Props) 
 
   function addPage() {
     const id = Math.max(0, ...pages.map((item) => item.id)) + 1
-    setPages((items) => [...items, { id, text: 'Bé hãy viết tiếp câu chuyện ở đây…', ...PAGE_LOOKS[items.length % PAGE_LOOKS.length] }])
+    const starter = pageSuggestions(character, setting, tone, pages.length + 1)[0].text
+    setPages((items) => [...items, { id, text: starter, ...PAGE_LOOKS[items.length % PAGE_LOOKS.length] }])
     setCurrent(pages.length)
   }
 
@@ -55,10 +79,11 @@ export function StoryStudio({ idea, character, setting, tone, onReset }: Props) 
   }
 
   return (
-    <section className="mt-7" aria-labelledby="story-studio-title">
+    <section ref={sectionRef} className={fullscreen ? 'fixed inset-0 z-[100] overflow-y-auto bg-[#eef5ef] p-3 sm:p-6' : 'mt-7 scroll-mt-24'} aria-labelledby="story-studio-title" aria-modal={fullscreen || undefined} role={fullscreen ? 'dialog' : undefined}>
+      <div className={fullscreen ? 'mx-auto max-w-6xl rounded-3xl border border-hairline bg-white p-4 shadow-2xl sm:p-6' : ''}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div><p className="kicker">Xưởng kể chuyện</p><h3 id="story-studio-title" className="mt-2 text-2xl">Viết từng trang, kể theo cách của bé</h3><p className="mt-1 text-sm text-ink/60">Bản nháp được tạo cục bộ, chưa dùng AI và chưa tải lên mạng.</p></div>
-        <span className="self-start rounded-full bg-green-soft px-3 py-2 text-xs font-extrabold">{pages.length} trang · {wordCount} từ</span>
+        <div><p className="kicker">Xưởng kể chuyện</p><h3 id="story-studio-title" tabIndex={-1} className="mt-2 text-2xl outline-none">Viết từng trang, kể theo cách của bé</h3><p className="mt-1 text-sm text-ink/60">Bản nháp được tạo cục bộ, chưa dùng AI và chưa tải lên mạng.</p></div>
+        <div className="flex flex-wrap gap-2"><span className="rounded-full bg-green-soft px-3 py-2 text-xs font-extrabold">{pages.length} trang · {wordCount} từ</span><button type="button" onClick={() => setFullscreen((value) => !value)} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline bg-white px-3 text-sm font-extrabold">{fullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}{fullscreen ? 'Thu nhỏ' : 'Phóng to'}</button></div>
       </div>
 
       <label className="mt-5 block text-sm font-extrabold">Tên truyện<input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={80} className="field mt-2" /></label>
@@ -70,7 +95,12 @@ export function StoryStudio({ idea, character, setting, tone, onReset }: Props) 
           </div>
         </article>
 
-        <aside className="rounded-2xl bg-cream p-3" aria-label="Danh sách trang">
+        <div className="md:col-start-1">
+          <p className="text-sm font-extrabold"><Sparkles className="mr-1 inline h-4 w-4 text-coral" />Gợi ý viết tiếp</p>
+          <div className="mt-2 grid gap-2 sm:grid-cols-2">{suggestions.map((item) => <button key={item.label} type="button" onClick={() => updatePage(item.text)} className="min-h-11 rounded-xl border border-hairline bg-white px-3 py-2 text-left text-sm font-bold hover:border-blue hover:text-blue"><span className="block font-extrabold">{item.label}</span><span className="mt-1 line-clamp-2 text-xs font-normal text-ink/60">{item.text}</span></button>)}</div>
+        </div>
+
+        <aside className="rounded-2xl bg-cream p-3 md:col-start-2 md:row-span-2 md:row-start-1" aria-label="Danh sách trang">
           <div className="grid grid-cols-2 gap-2 md:grid-cols-1">{pages.map((item, index) => <button key={item.id} type="button" onClick={() => setCurrent(index)} aria-current={current === index ? 'page' : undefined} className={`min-h-11 rounded-xl px-3 text-left text-sm font-extrabold ${current === index ? 'bg-blue text-white' : 'bg-white text-ink'}`}><span aria-hidden>{item.emoji}</span> Trang {index + 1}</button>)}</div>
           <button type="button" onClick={addPage} className="btn mt-3 w-full justify-center bg-white px-3"><Plus className="h-4 w-4" />Thêm trang</button>
           <button type="button" onClick={removePage} disabled={pages.length === 1} className="btn mt-2 w-full justify-center bg-white px-3 disabled:opacity-40"><Trash2 className="h-4 w-4" />Xóa trang</button>
@@ -82,6 +112,7 @@ export function StoryStudio({ idea, character, setting, tone, onReset }: Props) 
         <button type="button" disabled={current === pages.length - 1} onClick={() => setCurrent((index) => index + 1)} className="btn justify-center border border-hairline bg-white disabled:opacity-40">Trang sau<ChevronRight className="h-4 w-4" /></button>
         <button type="button" onClick={download} className="btn btn-primary justify-center sm:ml-auto"><Download className="h-4 w-4" />Tải truyện TXT</button>
         <button type="button" onClick={onReset} className="btn justify-center text-ink/70"><RotateCcw className="h-4 w-4" />Ý tưởng khác</button>
+      </div>
       </div>
     </section>
   )
