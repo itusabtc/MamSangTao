@@ -108,6 +108,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Loại game được chọn ngay dưới prompt và xưởng mở trực tiếp đúng giao diện game.
 - [x] Loại game tự cập nhật khi bé nhập prompt, chọn chip gợi ý hoặc mở ý tưởng Lập trình từ URL; lựa chọn thủ công vẫn được giữ cho tới khi ý tưởng đổi.
 - [x] Bé chọn được nhân vật ngay trong xưởng game; danh sách và nhân vật mặc định được lọc đồng thời theo bối cảnh prompt và luật chơi.
+- [x] Nhân vật tự quay theo hướng di chuyển; nhóm game bay có thêm chim, vẹt, đại bàng, cú, bướm và ong.
 - [x] Dải prompt nhanh được chia theo Tranh/Truyện/Lập trình; mỗi tab trong xưởng có gợi ý riêng và tự điền khi chọn.
 - [x] Ba thẻ công cụ trên trang chủ mở thẳng đúng tab prompt; mỗi landing page SEO có xưởng tương tác riêng, không dẫn vòng về trang chủ.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
