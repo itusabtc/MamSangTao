@@ -17,7 +17,7 @@ const TOOLS: Tool[] = [
     Icon: Sparkles,
     title: 'Vẽ tranh từ ý tưởng',
     desc: 'Biến một câu mô tả thành tranh minh hoạ đầy màu sắc.',
-    href: '/cong-cu/ve-tranh-tu-y-tuong',
+    href: '/?tool=tranh#thu-ngay',
   },
   {
     no: '02',
@@ -25,15 +25,15 @@ const TOOLS: Tool[] = [
     Icon: MoonStar,
     title: 'Tạo truyện cho bé',
     desc: 'Cùng bé chọn nhân vật, bối cảnh và một kết thúc thật riêng.',
-    href: '/cong-cu/tao-truyen-cho-be',
+    href: '/?tool=truyen#thu-ngay',
   },
   {
     no: '03',
     color: 'green',
     Icon: Blocks,
     title: 'Lập trình bằng khối',
-    desc: 'Xếp các khối lệnh để nhân vật chuyển động và kể chuyện.',
-    href: '/cong-cu/lap-trinh-cho-tre-em',
+    desc: 'Ghép khối lệnh, tạo hoạt cảnh, âm nhạc và sáu loại mini game tương tác.',
+    href: '/?tool=laptrinh#thu-ngay',
   },
 ]
 
@@ -84,7 +84,7 @@ export function ToolsSection() {
                 <span
                   className={`mt-6 inline-flex items-center gap-1.5 text-sm font-extrabold ${c.text}`}
                 >
-                  Khám phá công cụ →
+                  Mở xưởng sáng tạo →
                 </span>
               </Link>
             )

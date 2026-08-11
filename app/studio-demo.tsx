@@ -26,9 +26,9 @@ const CARD_COLORS = [
   ['#f1eafa', '#64aa82', '#294d9b'],
 ] as const
 
-export function StudioDemo() {
+export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
   const params = useSearchParams()
-  const [mode, setMode] = useState<Mode>('tranh')
+  const [mode, setMode] = useState<Mode>(initialMode)
   const [idea, setIdea] = useState('')
   const [style, setStyle] = useState<(typeof STYLES)[number]>('Hoạt hình')
   const [phase, setPhase] = useState<Phase>('form')
@@ -43,12 +43,13 @@ export function StudioDemo() {
   useEffect(() => {
     const fromUrl = params.get('idea')
     const toolFromUrl = params.get('tool') as Mode | null
-    if (!fromUrl) return
     const update = window.setTimeout(() => {
-      setIdea(fromUrl)
       if (toolFromUrl && MODES.some((item) => item.id === toolFromUrl)) setMode(toolFromUrl)
-      setPhase('form')
-      document.getElementById('idea-input')?.focus()
+      if (fromUrl) {
+        setIdea(fromUrl)
+        setPhase('form')
+        document.getElementById('idea-input')?.focus()
+      }
     }, 0)
     return () => window.clearTimeout(update)
   }, [params])

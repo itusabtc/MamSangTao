@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation'
 import { Sparkles } from 'lucide-react'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { StudioDemo } from '@/app/studio-demo'
 
 type ToolData = {
+  mode: 'tranh' | 'truyen' | 'laptrinh'
   kicker: string
   emoji: string
   accent: 'coral' | 'violet' | 'green'
@@ -18,6 +20,7 @@ type ToolData = {
 
 const TOOLS: Record<string, ToolData> = {
   've-tranh-tu-y-tuong': {
+    mode: 'tranh',
     kicker: 'Góc vẽ tranh',
     emoji: '🎨',
     accent: 'coral',
@@ -32,6 +35,7 @@ const TOOLS: Record<string, ToolData> = {
     ],
   },
   'tao-truyen-cho-be': {
+    mode: 'truyen',
     kicker: 'Góc kể chuyện',
     emoji: '📖',
     accent: 'violet',
@@ -46,13 +50,14 @@ const TOOLS: Record<string, ToolData> = {
     ],
   },
   'lap-trinh-cho-tre-em': {
+    mode: 'laptrinh',
     kicker: 'Góc lập trình',
     emoji: '🧩',
     accent: 'green',
     title: 'Học lập trình bằng khối cho trẻ em',
     description:
-      'Xếp khối lệnh trực quan để nhân vật di chuyển, phát âm thanh và tương tác — không cần biết gõ mã.',
-    prompts: ['Đưa phi thuyền tới mặt trăng', 'Làm mèo nhảy khi chạm sao', 'Tạo mê cung tìm kho báu'],
+      'Ghép khối lệnh trực quan để tạo hoạt cảnh, âm nhạc và mini game như mê cung, đua về đích, vượt chướng ngại hoặc bay qua cổng — không cần biết gõ mã.',
+    prompts: ['Tạo game chạy vượt chướng ngại trong khu rừng', 'Tạo game bay qua cổng ngoài vũ trụ', 'Khủng long đi qua mê cung tìm chìa khóa'],
     learning: 'Logic · Giải quyết vấn đề · Tư duy trình tự',
     seo: [
       'Lập trình bằng khối biến những khái niệm trừu tượng thành thao tác kéo thả trực quan. Bé nhìn thấy ngay kết quả của mỗi lệnh, từ đó hiểu quan hệ nguyên nhân — kết quả.',
@@ -158,7 +163,7 @@ export default async function ToolPage({
               {tool.prompts.map((prompt) => (
                 <Link
                   key={prompt}
-                  href={`/?idea=${encodeURIComponent(prompt)}#thu-ngay`}
+                  href={`/cong-cu/${slug}?idea=${encodeURIComponent(prompt)}#tool-workspace`}
                   className={`group flex items-center justify-between gap-3 rounded-2xl border border-hairline bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(29,49,80,0.12)]`}
                 >
                   <span className="text-lg font-extrabold text-ink">{prompt}</span>
@@ -172,6 +177,10 @@ export default async function ToolPage({
             <p className="mt-8 text-center text-sm font-bold uppercase tracking-wide text-ink/55">
               {tool.learning}
             </p>
+
+            <div id="tool-workspace" className="scroll-mt-24">
+              <StudioDemo initialMode={tool.mode} />
+            </div>
           </div>
         </section>
 
