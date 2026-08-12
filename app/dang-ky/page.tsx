@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { AuthForm } from '@/components/auth-form'
+import Link from 'next/link'
+import { chatGPTSignInPath } from '@/app/chatgpt-auth'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 
@@ -22,7 +23,7 @@ export default function RegisterPage() {
             </p>
           </div>
           <div className="mt-8">
-            <AuthForm mode="register" />
+            <div className="rounded-2xl border border-hairline bg-white p-7 text-center shadow-lg"><div className="text-5xl">🪴</div><h2 className="mt-4 text-2xl">Tạo hồ sơ Mầm miễn phí</h2><p className="mt-3 text-ink/65">Xác nhận bằng ChatGPT, sau đó hệ thống tự tạo hồ sơ để lưu thành tích và kết nối bạn bè.</p><Link href={chatGPTSignInPath('/ho-so')} className="btn btn-primary mt-6 w-full justify-center">Tiếp tục với ChatGPT →</Link><p className="mt-4 text-xs text-ink/50">Không cần tạo thêm mật khẩu mới.</p></div>
           </div>
         </div>
       </main>

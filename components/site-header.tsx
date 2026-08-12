@@ -69,8 +69,8 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
           </Link>
           <SiteSearch />
           <ThemeToggle />
-          <Link href="/dang-nhap" className="btn btn-primary ml-1.5 hidden text-[15px] sm:inline-flex" aria-label="Đăng nhập">
-            <LogIn className="h-[18px] w-[18px]" /><span>Đăng nhập</span>
+          <Link href="/ho-so" className="btn btn-primary ml-1.5 hidden text-[15px] sm:inline-flex" aria-label="Mở hồ sơ hoặc đăng nhập">
+            <LogIn className="h-[18px] w-[18px]" /><span>Hồ sơ</span>
           </Link>
           <button
             type="button"
@@ -92,7 +92,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
             <div className="rounded-2xl bg-cream p-2"><Link href="/khoa-hoc" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center gap-2 rounded-xl px-3 text-base font-extrabold text-blue"><GraduationCap className="h-5 w-5" />Khóa học</Link><div className="grid gap-1 sm:grid-cols-2">{COURSES.map((course) => <Link key={course.slug} href={`/khoa-hoc/${course.slug}`} onClick={() => setMenuOpen(false)} className="flex min-h-11 items-center gap-2 rounded-xl bg-white px-3 text-sm font-bold text-ink"><span>{course.icon}</span>{course.title}</Link>)}</div></div>
             {navItems.slice(1).map(item=><Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{item.label}</Link>)}
             <Link href="/danh-gia" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">Đánh giá</Link>
-            <Link href="/dang-nhap" onClick={() => setMenuOpen(false)} className="btn btn-primary mt-2 justify-center sm:hidden"><LogIn className="h-5 w-5" />Đăng nhập</Link>
+            <Link href="/ho-so" onClick={() => setMenuOpen(false)} className="btn btn-primary mt-2 justify-center sm:hidden"><LogIn className="h-5 w-5" />Hồ sơ / Đăng nhập</Link>
           </div>
         </nav>
       ) : null}
