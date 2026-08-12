@@ -224,3 +224,16 @@
     animation: none;
   }
 }
+/* Quân cờ cần gần đầy ô để trẻ dễ nhìn và chạm trên màn hình lớn. */
+button[aria-label^="Ô "] {
+  font-size: clamp(2.8rem, 9vmin, 6rem) !important;
+  line-height: 1;
+  overflow: visible;
+}
+
+/* Trạng thái bài nằm ngay trước tên bài trong phòng học toàn màn hình. */
+header:has(button[aria-label="Đóng bài học"]) > :nth-child(1) { order: 0; }
+header:has(button[aria-label="Đóng bài học"]) > :nth-child(4) { order: 1; }
+header:has(button[aria-label="Đóng bài học"]) > :nth-child(2) { order: 2; }
+header:has(button[aria-label="Đóng bài học"]) > :nth-child(3) { order: 3; }
+header:has(button[aria-label="Đóng bài học"]) > :nth-child(5) { order: 4; }

@@ -22,7 +22,7 @@ function ChessPractice({ lessonIndex }: { lessonIndex: number }) {
   function pathClear(from: Pos, to: Pos) { const dr=Math.sign(to.row-from.row), dc=Math.sign(to.col-from.col); let r=from.row+dr,c=from.col+dc; while(r!==to.row||c!==to.col){if(board[r][c])return false;r+=dr;c+=dc} return true }
   function valid(from: Pos, to: Pos) {
     const piece=board[from.row][from.col], target=board[to.row][to.col], dr=to.row-from.row, dc=to.col-from.col, ar=Math.abs(dr), ac=Math.abs(dc)
-    const white=WHITE.includes(piece); if ((white&&WHITE.includes(target))||(!white&&BLACK.includes(target))) return 'Ô đó đang có quân cùng đội.'
+    const white=WHITE.includes(piece); if (target&&((white&&WHITE.includes(target))||(!white&&BLACK.includes(target)))) return 'Ô đó đang có quân cùng đội.'
     if ('♙♟'.includes(piece)) { const direction=white?-1:1, start=white?6:1; if(dc===0&&!target&&(dr===direction||(from.row===start&&dr===2*direction&&!board[from.row+direction][from.col])))return ''; if(ac===1&&dr===direction&&target)return ''; return 'Quân Tốt đi thẳng một ô, nhưng chỉ ăn chéo.' }
     if ('♖♜'.includes(piece) && (dr===0||dc===0) && pathClear(from,to)) return ''
     if ('♗♝'.includes(piece) && ar===ac && pathClear(from,to)) return ''
