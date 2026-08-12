@@ -12,9 +12,9 @@ import { readProgress, recordStudy } from '@/lib/learning-progress'
 
 type Stage = 'guide' | 'practice' | 'check' | 'result'
 
-export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: readonly Lesson[]; courseSlug: string; courseIcon: string }) {
+export function CourseProgress({ lessons, courseSlug, courseIcon, autoOpenFirst = false }: { lessons: readonly Lesson[]; courseSlug: string; courseIcon: string; autoOpenFirst?: boolean }) {
   const [completed, setCompleted] = useState<number[]>([])
-  const [selected, setSelected] = useState<number | null>(null)
+  const [selected, setSelected] = useState<number | null>(autoOpenFirst ? 0 : null)
   const [stage, setStage] = useState<Stage>('guide')
   const [hearts, setHearts] = useState(5)
   const [answer, setAnswer] = useState<number | null>(null)
