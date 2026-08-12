@@ -115,7 +115,8 @@ Metadata trải nghiệm khóa học nằm tại `lib/course-experience.ts`; n�
 ### 5.3 Nhiệm vụ, đấu trường và báo cáo
 
 - Nhiệm vụ ngày/tuần, streak, XP, Hạt Mầm và huy hiệu.
-- Đấu trường cuối khóa: 3 câu, thi với Mầm Bot, kết quả, thi lại, ELO.
+- Đấu trường cuối khóa: 3 câu, kết quả, thi lại và ELO; có 4 Agent máy luôn online ở các mức 720/820/920/1040 ELO để không phụ thuộc thành viên thật đang trực tuyến.
+- Điểm đấu dùng kỳ vọng ELO: 10 trận đầu K=32, sau đó K=24; thắng cộng 6–32, thua trừ 4–24 tùy chênh lệch trình độ. Hoàn thành trận nhận +30 XP/+10 Hạt khi thắng, +8 XP/+2 Hạt khi thua.
 - Bảng xếp hạng riêng `/bang-xep-hang`: top 20, podium top 3, tab Điểm KN/Chuỗi ngày; ưu tiên D1, có dữ liệu fallback local.
 - Hồ sơ hiển thị thống kê, huy hiệu, tác phẩm, nhiệm vụ, cộng đồng, lời thách đấu và dữ liệu phụ huynh.
 
@@ -136,7 +137,7 @@ Metadata trải nghiệm khóa học nằm tại `lib/course-experience.ts`; n�
 
 ## 7. Tài khoản và cộng đồng
 
-- Có `/dang-nhap`, `/dang-ky`, `/ho-so`; đăng nhập Sites/ChatGPT và API community.
+- Có `/dang-nhap`, `/dang-ky`, `/ho-so`; đăng nhập Sites/ChatGPT và API community. Trên localhost, `/ho-so` dùng hồ sơ xem thử cục bộ thay vì chuyển tới route SIWC do Sites quản lý; trên production vẫn bắt buộc định danh thật.
 - D1 schema tạo/lazy-init trong `lib/community-db.ts`: `profiles`, `follows`, `challenges` cùng index.
 - Đã seed khoảng 20 thành viên mẫu; có tìm bạn, theo dõi, mời bạn và thách đấu.
 - Profile cộng đồng có XP, seeds, streak, avatar, bio, followers/following và challenge.
@@ -164,7 +165,7 @@ Metadata trải nghiệm khóa học nằm tại `lib/course-experience.ts`; n�
 | Danh mục khóa học | `components/course-discovery.tsx`, `lib/course-experience.ts` |
 | Dữ liệu bài học | `lib/courses.ts` |
 | Luồng học | `components/course-progress.tsx`, `lesson-activity.tsx` |
-| Nhiệm vụ/đấu trường | `components/daily-quests.tsx`, `course-arena.tsx` |
+| Nhiệm vụ/đấu trường | `components/daily-quests.tsx`, `course-arena.tsx`, `agent-challenge-panel.tsx`, `lib/challenge-agents.ts` |
 | Tiến độ/âm thanh | `lib/learning-progress.ts`, `learning-audio.ts` |
 | Shop/inventory | `components/seed-shop.tsx`, `lib/inventory.ts` |
 | Hồ sơ/community | `components/profile-community.tsx`, `profile-showcase.tsx`, `lib/community-db.ts`, `app/api/community/route.ts` |

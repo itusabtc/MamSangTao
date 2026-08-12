@@ -1,5 +1,7 @@
 'use client'
 
+import { calculateRatingChange } from '@/lib/challenge-agents'
+
 export type LearningProgress = {
   xp: number
   seeds: number
@@ -75,12 +77,17 @@ export function recordStudy(courseSlug: string, lessonIndex: number, perfect: bo
   return { progress, firstCompletion, xp: firstCompletion ? (perfect ? 60 : 40) : 0, seeds: firstCompletion ? (perfect ? 20 : 12) : 0 }
 }
 
-export function recordMatch(won: boolean) {
+export function recordMatch(won: boolean, opponentElo = 800) {
   const progress = readProgress()
+  const ratingChange = calculateRatingChange(progress.elo, opponentElo, won, progress.matches)
   progress.matches += 1
-  if (won) { progress.wins += 1; progress.elo += 24; progress.xp += 30; progress.seeds += 10 }
-  else progress.elo = Math.max(100, progress.elo - 8)
+  if (won) progress.wins += 1
+  progress.elo = Math.max(100, progress.elo + ratingChange)
+  const xp = won ? 30 : 8
+  const seeds = won ? 10 : 2
+  progress.xp += xp
+  progress.seeds += seeds
   if (progress.wins >= 1 && !progress.trophies.includes('🏆 Chiến thắng đầu tiên')) progress.trophies.push('🏆 Chiến thắng đầu tiên')
   writeProgress(progress)
-  return progress
+  return { progress, ratingChange, xp, seeds }
 }
