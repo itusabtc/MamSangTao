@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, Download, Paintbrush, RefreshCcw, RotateCcw, Sparkles } from 'lucide-react'
+import { Check, Download, Maximize2, Minimize2, Paintbrush, RefreshCcw, RotateCcw, Sparkles } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
 import { DrawingCanvas } from '@/components/drawing-canvas'
@@ -39,6 +39,14 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
   const [storySetting, setStorySetting] = useState('khu vườn trên mây')
   const [storyTone, setStoryTone] = useState('ấm áp')
   const [codingGame, setCodingGame] = useState<GameChoice>('auto')
+  const [studioFullscreen, setStudioFullscreen] = useState(false)
+
+  useEffect(() => {
+    if (!studioFullscreen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [studioFullscreen])
 
   useEffect(() => {
     const fromUrl = params.get('idea')
@@ -131,20 +139,26 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
   }
 
   return (
-    <div id="creative-studio" className="mx-auto mt-10 max-w-4xl scroll-mt-24 rounded-3xl border border-hairline bg-white p-5 text-left shadow-[0_16px_40px_rgba(29,49,80,0.10)] sm:p-7">
-      <div role="tablist" aria-label="Chọn loại dự án" className="flex flex-wrap gap-2">
-        {MODES.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            role="tab"
-            aria-selected={item.id === mode}
-            onClick={() => { setMode(item.id); if (item.id === 'laptrinh') setCodingGame(idea.trim() ? gameFromIdea(idea) : 'auto'); setPhase('form'); setNotice('') }}
-            className={`min-h-11 rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${item.id === mode ? 'bg-blue text-white' : 'bg-cream text-ink/70 hover:text-blue'}`}
-          >
-            <span aria-hidden>{item.icon}</span> {item.label}
-          </button>
-        ))}
+    <div id="creative-studio" role={studioFullscreen ? 'dialog' : undefined} aria-modal={studioFullscreen || undefined} aria-label={studioFullscreen ? 'Xưởng sáng tạo toàn màn hình' : undefined} className={studioFullscreen ? 'fixed inset-0 z-[90] overflow-y-auto bg-[#eef5ef] p-3 text-left sm:p-6' : 'mx-auto mt-10 max-w-4xl scroll-mt-24 rounded-3xl border border-hairline bg-white p-5 text-left shadow-[0_16px_40px_rgba(29,49,80,0.10)] sm:p-7'}>
+      <div className={studioFullscreen ? 'mx-auto min-h-full max-w-7xl rounded-3xl border border-hairline bg-white p-4 shadow-2xl sm:p-7' : ''}>
+      <div className="sticky top-0 z-30 flex items-start justify-between gap-3 rounded-2xl bg-white/95 py-1 backdrop-blur">
+        <div role="tablist" aria-label="Chọn loại dự án" className="flex flex-wrap gap-2">
+          {MODES.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={item.id === mode}
+              onClick={() => { setMode(item.id); if (item.id === 'laptrinh') setCodingGame(idea.trim() ? gameFromIdea(idea) : 'auto'); setPhase('form'); setNotice('') }}
+              className={`min-h-11 rounded-full px-4 py-2 text-sm font-extrabold transition-colors ${item.id === mode ? 'bg-blue text-white' : 'bg-cream text-ink/70 hover:text-blue'}`}
+            >
+              <span aria-hidden>{item.icon}</span> {item.label}
+            </button>
+          ))}
+        </div>
+        <button type="button" onClick={() => setStudioFullscreen((value) => !value)} aria-label={studioFullscreen ? 'Thu nhỏ xưởng sáng tạo' : 'Phóng to xưởng sáng tạo'} className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-hairline bg-white px-3 text-sm font-extrabold shadow-sm hover:border-blue hover:text-blue">
+          {studioFullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}<span className="hidden sm:inline">{studioFullscreen ? 'Thu nhỏ' : 'Phóng to'}</span>
+        </button>
       </div>
 
       {phase === 'loading' ? (
@@ -203,6 +217,7 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
           <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-ink/55">Mô tả nhân vật, màu sắc hoặc nơi câu chuyện diễn ra.</p><button type="submit" className="btn btn-coral w-full justify-center sm:w-auto">{mode === 'tranh' ? 'Tạo 4 tranh mẫu' : 'Tạo dự án'}<Sparkles className="h-4 w-4" /></button></div>
         </form>
       )}
+      </div>
     </div>
   )
 }
