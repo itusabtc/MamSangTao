@@ -3,6 +3,8 @@
 import { BookOpen, ChevronLeft, ChevronRight, Download, Maximize2, Minimize2, Plus, RefreshCcw, RotateCcw, Sparkles, Trash2 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { StorySketch } from '@/components/story-sketch'
+import Link from 'next/link'
+import { useInventory } from '@/lib/inventory'
 
 type Props = { idea: string; character: string; setting: string; tone: string; onReset: () => void }
 type Page = { id: number; text: string; emoji: string; color: string; drawing?: string }
@@ -39,6 +41,7 @@ function pageSuggestions(character: string, setting: string, tone: string, pageN
 }
 
 export function StoryStudio({ idea, character, setting, tone, onReset }: Props) {
+  const owned = useInventory()
   const sectionRef = useRef<HTMLElement>(null)
   const [title, setTitle] = useState(`Chuyện của ${character}`)
   const [pages, setPages] = useState(() => initialPages(idea, character, setting, tone))
@@ -99,6 +102,7 @@ export function StoryStudio({ idea, character, setting, tone, onReset }: Props) 
       </div>
 
       <label className="mt-5 block text-sm font-extrabold">Tên truyện<input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={80} className="field mt-2" /></label>
+      <div className="mt-4 rounded-2xl bg-cream p-3"><p className="text-sm font-extrabold">Nền truyện từ Kho đồ</p>{owned.includes('story-ocean')?<div className="mt-2 flex flex-wrap gap-2">{[['🐳','#bde9ff'],['🐠','#d8f5ff'],['🏝️','#fff0c8'],['🐚','#e8ddff']].map(([emoji,color])=><button key={emoji} type="button" onClick={()=>setPages(items=>items.map((item,index)=>index===current?{...item,emoji,color}:item))} className="grid h-12 w-12 place-items-center rounded-xl bg-white text-2xl" aria-label={`Dùng nền ${emoji}`}>{emoji}</button>)}</div>:<Link href="/cua-hang-mam" className="mt-2 block text-xs font-bold text-blue hover:underline">🔒 Mở bộ nền Đại dương</Link>}</div>
 
       <div className="mt-5 grid gap-4 md:grid-cols-[1fr_220px]">
         <article className="overflow-hidden rounded-3xl border-2 border-hairline" style={{ backgroundColor: page.color }}>

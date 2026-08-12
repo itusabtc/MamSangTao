@@ -2,6 +2,8 @@
 
 import { Download, Eraser, Maximize2, Minimize2, Paintbrush, RotateCcw, Trash2, Undo2, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import Link from 'next/link'
+import { useInventory } from '@/lib/inventory'
 
 type Props = {
   idea: string
@@ -17,6 +19,7 @@ const PALETTE = ['#1d3150', '#294d9b', '#f47d61', '#f5c34d', '#64aa82', '#8a73c9
 const STICKERS = ['⭐', '☁️', '🌈', '🌸', '🚀', '🐱']
 
 export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) {
+  const owned = useInventory()
   const sectionRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasWrapRef = useRef<HTMLDivElement>(null)
@@ -210,7 +213,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
       <div className="mt-5 grid gap-4 lg:grid-cols-[190px_1fr]">
         <div className="rounded-2xl bg-cream p-4">
           <p className="text-sm font-extrabold">Màu cọ</p>
-          <div className="mt-2 flex flex-wrap gap-2">{PALETTE.map((item) => <button key={item} type="button" onClick={() => { setColor(item); setEraser(false) }} aria-label={`Chọn màu ${item}`} aria-pressed={!eraser && color === item} className={`h-10 w-10 rounded-full border-2 ${!eraser && color === item ? 'border-blue ring-2 ring-blue/20' : 'border-white'}`} style={{ backgroundColor: item }} />)}</div>
+          <div className="mt-2 flex flex-wrap gap-2">{[...PALETTE,...(owned.includes('palette-sunset')?['#ff8a65','#ffb74d','#ffd180','#d46a8c']:[])].filter((item,index,items)=>items.indexOf(item)===index).map((item) => <button key={item} type="button" onClick={() => { setColor(item); setEraser(false) }} aria-label={`Chọn màu ${item}`} aria-pressed={!eraser && color === item} className={`h-10 w-10 rounded-full border-2 ${!eraser && color === item ? 'border-blue ring-2 ring-blue/20' : 'border-white'}`} style={{ backgroundColor: item }} />)}</div>
           <label className="mt-4 block text-sm font-extrabold">Cỡ cọ: {size}<input type="range" min="3" max="42" value={size} onChange={(event) => setSize(Number(event.target.value))} className="mt-2 w-full" /></label>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <button type="button" onClick={() => setEraser(false)} aria-pressed={!eraser} className={`btn justify-center px-2 ${!eraser ? 'bg-blue text-white' : 'bg-white'}`}><Paintbrush className="h-4 w-4" />Cọ</button>
@@ -219,7 +222,8 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
             <button type="button" onClick={clear} className="btn justify-center bg-white px-2"><Trash2 className="h-4 w-4" />Xóa</button>
           </div>
           <p className="mt-4 text-sm font-extrabold">Sticker</p>
-          <div className="mt-2 grid grid-cols-3 gap-2">{STICKERS.map((item) => <button key={item} type="button" onClick={() => addSticker(item)} className="grid h-11 place-items-center rounded-xl bg-white text-xl" aria-label={`Thêm sticker ${item}`}>{item}</button>)}</div>
+          <div className="mt-2 grid grid-cols-3 gap-2">{[...STICKERS,...(owned.includes('sticker-space')?['🪐','🛸','🌟']:[])].map((item) => <button key={item} type="button" onClick={() => addSticker(item)} className="grid h-11 place-items-center rounded-xl bg-white text-xl" aria-label={`Thêm sticker ${item}`}>{item}</button>)}</div>
+          {owned.includes('sticker-space')?<p className="mt-2 text-xs font-bold text-green">✓ Đã dùng bộ Sticker Vũ trụ</p>:<Link href="/cua-hang-mam" className="mt-2 block text-xs font-bold text-blue hover:underline">🔒 Mở thêm sticker trong Cửa hàng Mầm</Link>}
           <button type="button" onClick={removeSelectedSticker} className="btn mt-3 w-full justify-center bg-white px-2"><Trash2 className="h-4 w-4" />Xóa sticker chọn</button>
           <div className="mt-5 border-t border-hairline pt-4">
             <p className="text-sm font-extrabold">Chữ trên tranh</p>

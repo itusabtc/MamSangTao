@@ -2,6 +2,8 @@
 
 import { ArrowDown, ArrowUp, Download, Gamepad2, Maximize2, Minimize2, Play, Plus, RotateCcw, Square, Trash2, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
+import Link from 'next/link'
+import { useInventory } from '@/lib/inventory'
 
 type Props = { idea: string; initialGame: GameChoice; onReset: () => void }
 type CommandType = 'move' | 'back' | 'up' | 'down' | 'turn' | 'say' | 'color' | 'sound'
@@ -89,6 +91,7 @@ const PALETTE: Omit<Command, 'id'>[] = [
 ]
 
 export function CodingStudio({ idea, initialGame, onReset }: Props) {
+  const owned = useInventory()
   const initialTheme = themeFromIdea(idea)
   const resolvedInitialGame = initialGame === 'auto' ? gameFromIdea(idea) : initialGame
   const sectionRef = useRef<HTMLElement>(null)
@@ -116,15 +119,15 @@ export function CodingStudio({ idea, initialGame, onReset }: Props) {
   const [pipeX, setPipeX] = useState(88)
   const [gapY, setGapY] = useState(48)
   const theme = useMemo(() => themeFromIdea(idea), [idea])
-  const availableCharacters = useMemo(() => characterOptions(theme, gameType), [theme, gameType])
+  const availableCharacters = useMemo(() => [...characterOptions(theme, gameType), ...(owned.includes('game-bird')&&gameType==='flappy'?['🐦','🦜','🕊️']:[])].filter((item,index,items)=>items.indexOf(item)===index), [theme, gameType, owned])
   const goalIcon = gameType === 'flappy' ? '' : gameType === 'race' || gameType === 'runner' ? '🏁' : gameType === 'treasure' ? '🧰' : gameType === 'maze' ? '🗝️' : theme.item
 
   const playTone = useCallback((frequency = 523, duration = 0.22) => {
     if (!audioRef.current) audioRef.current = new AudioContext()
     const audio = audioRef.current; const oscillator = audio.createOscillator(); const gain = audio.createGain()
-    oscillator.type = 'sine'; oscillator.frequency.value = frequency; gain.gain.setValueAtTime(0.12, audio.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + duration)
+    oscillator.type = owned.includes('music-magic') ? 'triangle' : 'sine'; oscillator.frequency.value = owned.includes('music-magic') ? frequency * 1.12 : frequency; gain.gain.setValueAtTime(0.12, audio.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + duration)
     oscillator.connect(gain); gain.connect(audio.destination); oscillator.start(); oscillator.stop(audio.currentTime + duration)
-  }, [])
+  }, [owned])
 
   useEffect(() => () => { runToken.current += 1; if (musicTimer.current) window.clearInterval(musicTimer.current); void audioRef.current?.close() }, [])
   useEffect(() => {
@@ -245,6 +248,7 @@ export function CodingStudio({ idea, initialGame, onReset }: Props) {
 
         {gameMode ? <div className="mt-4 rounded-2xl bg-green-soft p-3"><div className="flex flex-col gap-2 sm:flex-row sm:items-center"><p className="text-sm font-extrabold">Chọn loại game:</p><div className="flex flex-wrap gap-2">{GAME_OPTIONS.map((game) => <button key={game.id} type="button" onClick={() => { setGameType(game.id); setSelectedActor(characterOptions(theme, game.id)[0]); setFacing('right'); setScore(0); setStar({ x: 72, y: 55 }); setPipeX(88); setPosition({ x: 25, y: game.id === 'flappy' ? 48 : 62, rotation: 0 }) }} aria-pressed={gameType === game.id} className={`min-h-10 rounded-full px-3 text-sm font-bold ${gameType === game.id ? 'bg-blue text-white' : 'bg-white text-ink'}`}>{game.icon} {game.label}</button>)}</div></div><p className="mt-2 text-xs text-ink/60">Prompt được nhận diện theo chủ đề <strong>{theme.label}</strong>; bé vẫn có thể đổi loại game ở đây.</p><div className="mt-3 border-t border-ink/10 pt-3"><p className="text-sm font-extrabold">Chọn nhân vật phù hợp:</p><div className="mt-2 flex flex-wrap gap-2">{availableCharacters.map((actor) => <button key={actor} type="button" onClick={() => setSelectedActor(actor)} aria-pressed={selectedActor === actor} aria-label={`Chọn nhân vật ${actor}`} className={`flex min-h-12 min-w-12 items-center justify-center rounded-2xl border-2 text-2xl transition ${selectedActor === actor ? 'border-blue bg-white shadow-sm' : 'border-transparent bg-white/70 hover:border-blue/30'}`}>{actor}</button>)}</div><p className="mt-2 text-xs text-ink/60">Các nhân vật đã được lọc theo <strong>{theme.label}</strong> và luật chơi <strong>{GAME_OPTIONS.find((game) => game.id === gameType)?.label}</strong>.</p></div></div> : null}
 
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-hairline bg-cream/60 p-3"><strong className="text-sm">Vật phẩm dự án:</strong>{owned.includes('game-bird')?<span className="rounded-full bg-green-soft px-3 py-1 text-xs font-bold text-green">🐦 Nhân vật Chim bay</span>:<Link href="/cua-hang-mam" className="rounded-full bg-white px-3 py-1 text-xs font-bold text-blue">🔒 Nhân vật Chim bay</Link>}{owned.includes('music-magic')?<span className="rounded-full bg-violet/10 px-3 py-1 text-xs font-bold text-violet">🎵 Âm thanh Phép thuật đang bật</span>:<Link href="/cua-hang-mam" className="rounded-full bg-white px-3 py-1 text-xs font-bold text-blue">🔒 Âm thanh Phép thuật</Link>}</div>
         <div className="mt-5 grid gap-4 lg:grid-cols-[210px_1fr_1fr]">
           <aside className="rounded-2xl bg-cream p-3"><p className="text-sm font-extrabold">Khối lệnh</p><p className="mt-1 text-xs text-ink/55">Bấm hoặc kéo sang chương trình.</p><div className="mt-3 space-y-2">{PALETTE.map((block) => <button key={block.type} type="button" draggable onDragStart={(event) => event.dataTransfer.setData('application/x-block', block.type)} onClick={() => add(block.type)} className="flex min-h-11 w-full items-center gap-2 rounded-xl px-3 text-left text-sm font-extrabold text-white shadow-sm" style={{ backgroundColor: block.color }}><Plus className="h-4 w-4" />{block.label}</button>)}</div></aside>
 
