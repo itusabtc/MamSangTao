@@ -119,6 +119,8 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Chọn bài mở phòng học toàn màn hình có minh họa tương tác, điều hướng bài trước/sau và đóng bằng Esc; Cờ vua có bàn 8×8 kiểm tra nước đi, các khóa khác có bài tập trực quan tương ứng.
 - [x] Phòng học dùng đúng chiều cao viewport, header/footer cố định, bàn thực hành tự co và cột hướng dẫn cuộn độc lập; mobile chuyển sang luồng một cột không che nội dung.
 - [x] Điều hướng bài trước/sau và tiến độ được gom lên header; loại bỏ footer để tăng chiều cao hữu dụng cho khu thực hành.
+- [x] Bàn cờ cho phép đổi lựa chọn khi bấm quân cùng đội; có chế độ trộn bàn, đổi chỗ quân, kiểm tra kết quả, gợi ý ô ngẫu nhiên và khôi phục thế chuẩn.
+- [x] Các bài âm nhạc, vẽ, kể chuyện và lập trình đều có nút tạo thử thách hoặc ý tưởng ngẫu nhiên tương ứng.
 - [x] Ba thẻ công cụ trên trang chủ mở thẳng đúng tab prompt; mỗi landing page SEO có xưởng tương tác riêng, không dẫn vòng về trang chủ.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
