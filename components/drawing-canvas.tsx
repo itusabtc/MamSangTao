@@ -16,7 +16,14 @@ type Props = {
 type StickerItem = { id: number; emoji: string; x: number; y: number; size: number }
 
 const PALETTE = ['#1d3150', '#294d9b', '#f47d61', '#f5c34d', '#64aa82', '#8a73c9', '#ffffff']
-const STICKERS = ['⭐', '☁️', '🌈', '🌸', '🚀', '🐱']
+const STICKER_GROUPS = [
+  { id: 'noi-bat', label: 'Nổi bật', items: ['⭐', '✨', '❤️', '🌈', '🎈', '🎁', '🏆', '💎'] },
+  { id: 'dong-vat', label: 'Động vật', items: ['🐱', '🐶', '🐰', '🦊', '🐼', '🦁', '🐸', '🐳', '🐙', '🦋', '🐦', '🦄'] },
+  { id: 'thien-nhien', label: 'Thiên nhiên', items: ['☀️', '🌙', '☁️', '🌲', '🌴', '🌻', '🌸', '🍄', '🌊', '❄️', '🔥', '🍀'] },
+  { id: 'vu-tru', label: 'Vũ trụ', items: ['🚀', '🌟', '🌙', '🌍', '☄️', '👨‍🚀'] },
+  { id: 'cam-xuc', label: 'Cảm xúc', items: ['😀', '🥰', '😎', '🤩', '😂', '😊', '😴', '🤔', '😮', '🥳', '💪', '👏'] },
+  { id: 'vat-pham', label: 'Đồ vật', items: ['⚽', '🎸', '🎨', '📚', '🧸', '🚲', '🚗', '✈️', '🏰', '👑', '🍦', '🎂'] },
+] as const
 
 export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) {
   const owned = useInventory()
@@ -28,6 +35,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
   const draggingSticker = useRef<{ id: number; offsetX: number; offsetY: number } | null>(null)
   const history = useRef<string[]>([])
   const [color, setColor] = useState(PALETTE[0])
+  const [stickerGroup, setStickerGroup] = useState<(typeof STICKER_GROUPS)[number]['id']>('noi-bat')
   const [size, setSize] = useState(10)
   const [eraser, setEraser] = useState(false)
   const [stickers, setStickers] = useState<StickerItem[]>([
@@ -210,7 +218,7 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
           <button type="button" onClick={onClose} aria-label="Đóng bàn vẽ" className="grid h-11 w-11 place-items-center rounded-full border border-hairline"><X className="h-5 w-5" /></button>
         </div>
       </div>
-      <div className="mt-5 grid gap-4 lg:grid-cols-[190px_1fr]">
+      <div className="mt-5 grid gap-4 lg:grid-cols-[240px_1fr]">
         <div className="rounded-2xl bg-cream p-4">
           <p className="text-sm font-extrabold">Màu cọ</p>
           <div className="mt-2 flex flex-wrap gap-2">{[...PALETTE,...(owned.includes('palette-sunset')?['#ff8a65','#ffb74d','#ffd180','#d46a8c']:[])].filter((item,index,items)=>items.indexOf(item)===index).map((item) => <button key={item} type="button" onClick={() => { setColor(item); setEraser(false) }} aria-label={`Chọn màu ${item}`} aria-pressed={!eraser && color === item} className={`h-10 w-10 rounded-full border-2 ${!eraser && color === item ? 'border-blue ring-2 ring-blue/20' : 'border-white'}`} style={{ backgroundColor: item }} />)}</div>
@@ -221,8 +229,9 @@ export function DrawingCanvas({ idea, style, colors, subject, onClose }: Props) 
             <button type="button" onClick={undo} className="btn justify-center bg-white px-2"><Undo2 className="h-4 w-4" />Lùi</button>
             <button type="button" onClick={clear} className="btn justify-center bg-white px-2"><Trash2 className="h-4 w-4" />Xóa</button>
           </div>
-          <p className="mt-4 text-sm font-extrabold">Sticker</p>
-          <div className="mt-2 grid grid-cols-3 gap-2">{[...STICKERS,...(owned.includes('sticker-space')?['🪐','🛸','🌟']:[])].map((item) => <button key={item} type="button" onClick={() => addSticker(item)} className="grid h-11 place-items-center rounded-xl bg-white text-xl" aria-label={`Thêm sticker ${item}`}>{item}</button>)}</div>
+          <div className="mt-4 flex items-center justify-between gap-2"><p className="text-sm font-extrabold">Kho sticker</p><span className="rounded-full bg-yellow/20 px-2 py-1 text-[10px] font-extrabold text-ink/60">62+ hình</span></div>
+          <div className="mt-2 flex gap-1 overflow-x-auto pb-1" aria-label="Nhóm sticker">{STICKER_GROUPS.map((group) => <button key={group.id} type="button" onClick={() => setStickerGroup(group.id)} aria-pressed={stickerGroup === group.id} className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-extrabold transition ${stickerGroup === group.id ? 'bg-blue text-white' : 'bg-white text-ink/70 hover:text-blue'}`}>{group.label}</button>)}</div>
+          <div className="mt-2 grid max-h-44 grid-cols-4 gap-2 overflow-y-auto pr-1">{[...STICKER_GROUPS.find((group) => group.id === stickerGroup)!.items,...(stickerGroup === 'vu-tru' && owned.includes('sticker-space') ? ['🪐','🛸','👽','🛰️'] : [])].map((item, index) => <button key={`${stickerGroup}-${item}-${index}`} type="button" onClick={() => addSticker(item)} className="grid h-11 place-items-center rounded-xl bg-white text-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-blue" aria-label={`Thêm sticker ${item}`}>{item}</button>)}</div>
           {owned.includes('sticker-space')?<p className="mt-2 text-xs font-bold text-green">✓ Đã dùng bộ Sticker Vũ trụ</p>:<Link href="/cua-hang-mam" className="mt-2 block text-xs font-bold text-blue hover:underline">🔒 Mở thêm sticker trong Cửa hàng Mầm</Link>}
           <button type="button" onClick={removeSelectedSticker} className="btn mt-3 w-full justify-center bg-white px-2"><Trash2 className="h-4 w-4" />Xóa sticker chọn</button>
           <div className="mt-5 border-t border-hairline pt-4">

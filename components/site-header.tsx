@@ -15,11 +15,10 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [courseMenuOpen, setCourseMenuOpen] = useState(false)
   const [courseMenuDismissed, setCourseMenuDismissed] = useState(false)
-  const prefix = variant === 'home' ? '' : '/'
   const navItems: NavItem[] = [
     { label: 'Xưởng sáng tạo', href: '/xuong-sang-tao' },
     { label: 'Cửa hàng Mầm', href: '/cua-hang-mam' },
-    { label: 'Cách hoạt động', href: `${prefix}#cach-hoat-dong` },
+    { label: 'Bảng xếp hạng', href: '/bang-xep-hang' },
   ]
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-hairline bg-cream/90 backdrop-blur-md">
+    <header data-variant={variant} className="sticky top-0 z-50 border-b border-hairline bg-cream/90 backdrop-blur-md">
       <div className="wrap flex h-[88px] items-center gap-3 sm:gap-6">
         <div className="flex shrink-0 items-center"><BrandLogo size={46} /></div>
 
