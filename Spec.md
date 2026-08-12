@@ -1,138 +1,223 @@
-# Mầm Sáng Tạo — Product Specification
+# Mầm Sáng Tạo — Product & Engineering Specification
 
-## 1. Tầm nhìn
+> Cập nhật: 12/08/2026 · Trạng thái nguồn: `main` · Production: <https://mam-sang-tao.hailong1289.chatgpt.site>
 
-Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi, nơi trẻ biến ý tưởng thành tranh, truyện và dự án lập trình bằng khối. Sản phẩm khuyến khích trẻ chủ động thử, sửa và tạo ra tác phẩm thay vì chỉ xem nội dung thụ động.
+Tài liệu này là nguồn bàn giao chính thức cho AI/developer tiếp theo. Đọc `AGENTS.md` và tài liệu Next.js cục bộ trong `node_modules/next/dist/docs/` trước khi sửa mã. Không suy luận theo Next.js phiên bản cũ.
 
-## 2. Đối tượng
+## 1. Tầm nhìn và nguyên tắc
 
-- Người dùng chính: trẻ 6–12 tuổi, thao tác cùng hoặc dưới sự hướng dẫn của người lớn.
-- Người quyết định: phụ huynh, giáo viên và trường học.
-- Nguyên tắc: không quảng cáo, không trò chuyện với người lạ, không công khai dữ liệu trẻ em.
+Mầm Sáng Tạo là hệ sinh thái học và sáng tạo an toàn cho trẻ 6–12 tuổi. Trẻ biến ý tưởng thành tranh, truyện, hoạt hình, âm nhạc và mini game; học qua nghe–nhìn–chạm–thử; được phép sai và tự điều chỉnh.
 
-## 3. Phạm vi phiên bản hiện tại
+- Người dùng chính: trẻ 6–12 tuổi; phụ huynh là người đồng hành/quyết định.
+- Không quảng cáo, loot box, mua ngẫu nhiên, dark pattern hoặc tạo áp lực điểm số.
+- Không trò chuyện công khai với người lạ; không công khai dữ liệu trẻ em.
+- Chức năng demo phải ghi rõ nếu chưa dùng AI/API thật.
+- Mobile-first; vùng bấm tối thiểu 44px; tiếng Việt tự nhiên, dễ hiểu.
 
-Đây là prototype front-end có tương tác, chưa gọi API AI, chưa lưu tài khoản và chưa gửi biểu mẫu thật.
+## 2. Stack, nguồn và phát hành
 
-### Có trong phiên bản này
+- Runtime: vinext/Sites, App Router API, React 19, TypeScript strict, Tailwind CSS.
+- Lưu cloud/community: Cloudflare D1 binding `DB` qua Sites.
+- Trạng thái cá nhân trên thiết bị: `localStorage` (tiến độ, Hạt Mầm, kho đồ, lộ trình sở thích).
+- GitHub: `https://github.com/itusabtc/MamSangTao.git`, nhánh `main`.
+- Sites project: lấy đúng `project_id` trong `.openai/hosting.json`; không tạo site mới.
+- Vercel/v0 chỉ là nguồn layout tham khảo, không phải runtime triển khai.
+- Trước khi bàn giao: `npm.cmd run typecheck`, `npm.cmd run lint`, `npm.cmd run build` đều phải đạt.
+- Sau thay đổi đã được duyệt: commit đúng file liên quan, push GitHub, đóng gói bằng Sites, save version, deploy và chờ trạng thái `succeeded`.
+- Không stage log, archive build, `AGENTS.md`, `CLAUDE.md`, `docs/` hoặc file ngoài phạm vi nếu chưa được yêu cầu.
 
-- Trang chủ responsive và ba landing page công cụ.
-- Luồng tạo tranh mẫu: nhập ý tưởng → chờ tạo → xem bốn phương án → chọn phong cách/tác phẩm → thao tác tiếp.
-- Công cụ Truyện tạo bản nháp nhiều trang và truyện tranh tự vẽ; công cụ Lập trình có xưởng khối lệnh và sân khấu chạy thử.
-- Tìm kiếm nội bộ, dark mode, menu mobile, trang giới thiệu/pháp lý/liên hệ.
-- Metadata, Open Graph, robots và sitemap.
+## 3. Điều hướng và route
 
-### Chưa có trong phiên bản này
+Header desktop/mobile:
 
-- API tạo ảnh hoặc mô hình ngôn ngữ thật.
-- API tạo ảnh AI, Excalidraw và Blockly thật. Bàn vẽ canvas nội bộ đã hoạt động.
-- Đăng nhập, lưu cloud, thanh toán hoặc gửi email thật.
-- Chia sẻ công khai tác phẩm của trẻ.
+1. `/xuong-sang-tao` — Xưởng sáng tạo.
+2. `/khoa-hoc` — Khóa học, có mega-menu 5 khóa.
+3. `/cua-hang-mam` — Cửa hàng Mầm.
+4. `/bang-xep-hang` — Bảng xếp hạng.
+5. `/danh-gia`, tìm kiếm, dark mode, `/ho-so`.
 
-## 4. Luồng tạo tranh chuẩn
+Mega-menu đóng khi chọn link, nhấn Escape hoặc rời vùng menu; không tự mở lại tức thì. Giới thiệu, liên hệ, pháp lý và thương hiệu nằm ở footer.
 
-1. Người dùng chọn tab **Tranh**.
-2. Nhập ý tưởng hoặc bấm một chip gợi ý; chip phải tự điền nội dung và cuộn tới xưởng.
-3. Chọn phong cách: Hoạt hình, Màu nước, Giấy cắt hoặc Tranh tô màu.
-4. Bấm **Tạo 4 tranh mẫu**.
-5. Hiển thị lần lượt các trạng thái: gom ý tưởng → pha màu → hoàn thiện.
-6. Hiển thị bốn phương án minh họa prototype, có trạng thái được chọn rõ ràng.
-7. Cho phép: chọn tranh, đổi phong cách, tạo lại, mở bàn vẽ và tải bản mẫu.
-8. Bàn vẽ mở toàn màn hình và focus đúng đầu công cụ; người dùng có thể thu nhỏ/phóng to, sửa chữ/màu chữ, đổi màu từng vùng nền, dùng cọ/tẩy, hoàn tác, thêm/chọn/kéo thả/xóa cả icon mẫu lẫn sticker, khôi phục mẫu và tải PNG.
-9. Mọi thao tác prototype phải giải thích rõ rằng đây chưa phải ảnh AI thật.
+Route công khai chính: `/`, `/cong-cu/[slug]`, `/xuong-sang-tao`, `/khoa-hoc`, `/khoa-hoc/[slug]`, `/cua-hang-mam`, `/bang-xep-hang`, `/ho-so`, `/dang-nhap`, `/dang-ky`, `/danh-gia`, `/gioi-thieu`, `/lien-he`, `/thuong-hieu`, `/chinh-sach`, `/dieu-khoan`.
 
-## 5. Yêu cầu UX
+## 4. Xưởng sáng tạo
 
-### Luồng Truyện
+### 4.1 Prompt chung
 
-1. Nhập ý tưởng, nhân vật, bối cảnh và chọn giọng kể.
-2. Tạo bản nháp bốn trang cục bộ, giải thích rõ chưa dùng AI.
-3. Cho phép sửa tên truyện và nội dung từng trang, thêm/xóa/chuyển trang; trang mới có nội dung mở đầu, nhóm gợi ý theo ngữ cảnh và nút sinh bộ gợi ý khác.
-4. Hiển thị số trang, số từ và cho phép tải toàn bộ truyện dạng TXT.
-5. Xưởng Truyện có chế độ phóng to toàn màn hình và thu nhỏ mà không mất nội dung.
-6. Chế độ Truyện tranh cung cấp khung minh họa riêng cho từng trang, gợi ý cảnh vẽ và cọ/tẩy/màu/tải ảnh đơn giản.
+- Mỗi tab có prompt gợi ý riêng; chọn chip phải điền nội dung, chọn đúng tab/tool và cuộn/focus đúng vùng nhập.
+- Dải prompt nhanh bên ngoài được chia theo cụm tool, không tạo vòng điều hướng.
+- Nút Phóng to/Thu nhỏ luôn ở bên phải hàng tab và áp dụng cho cả màn hình prompt lẫn studio.
+- Khi đóng studio hoặc “Ý tưởng khác”, khôi phục scroll và focus đúng vị trí trước đó.
 
-### Luồng Lập trình
+### 4.2 Vẽ tranh
 
-1. Nhập nhiệm vụ rồi mở xưởng khối lệnh.
-2. Chọn Tự nhận diện hoặc một trong sáu loại game ngay dưới prompt; dự án mở thẳng ở chế độ game tương ứng.
-3. Bấm hoặc kéo các khối di chuyển, xoay, nói, phát nốt nhạc và đổi màu vào chương trình.
-4. Sắp xếp bằng kéo thả hoặc nút lên/xuống; cho phép xóa từng khối hoặc toàn bộ.
-5. Chạy tuần tự trên sân khấu, tô sáng khối hiện tại, dừng và đặt lại trạng thái.
-6. Hỗ trợ toàn màn hình, khôi phục mẫu và tải dự án JSON cục bộ.
-7. Game nhận diện prompt để chọn chủ đề; hỗ trợ sáu luật chơi, tính điểm và nhạc nền Web Audio.
-8. Khi chọn Ý tưởng khác, trang cuộn và focus lại đúng ô nhập ý tưởng của tab hiện tại.
+- Nhập ý tưởng → chọn phong cách → trạng thái tạo → 4 phương án mẫu → chọn → mở bản vẽ/tạo lại/tải mẫu.
+- Canvas hỗ trợ chuột/cảm ứng: cọ, tẩy, màu, cỡ cọ, undo, clear, khôi phục mẫu, tải PNG.
+- Sửa tiêu đề, phụ đề, màu chữ và màu ba vùng nền độc lập.
+- Sticker/icon mẫu đều chọn, kéo thả và xóa được; sticker được chọn có viền rõ.
+- Kho có 62+ emoji, chia 6 nhóm: Nổi bật, Động vật, Thiên nhiên, Vũ trụ, Cảm xúc, Đồ vật; bộ đã mua bổ sung item tương ứng.
+- Fullscreen khóa scroll nền, focus heading; thu nhỏ/đóng phải trả focus về phương án tranh đã chọn.
+- Đây là canvas nội bộ, chưa phải Excalidraw hay API tạo ảnh thật.
 
-- Mobile-first; vùng bấm tối thiểu 44px.
-- Dưới 901px phải có menu điều hướng thay thế nav desktop.
-- Có focus state, label/aria-label và hỗ trợ bàn phím.
-- Tôn trọng `prefers-reduced-motion`.
-- Không dùng dark pattern hoặc tạo cảm giác chức năng demo là chức năng thật.
-- Tiếng Việt tự nhiên, dễ hiểu với trẻ và phụ huynh.
+### 4.3 Truyện
 
-## 6. Yêu cầu SEO
+- Cấu hình nhân vật, bối cảnh, giọng kể → bản nháp nhiều trang.
+- Sửa tên/nội dung từng trang; thêm, xóa, chuyển trang; tải TXT.
+- Trang mới có nội dung mở và 4 gợi ý theo ngữ cảnh; có nút sinh bộ gợi ý khác.
+- Fullscreen/thu nhỏ không làm mất nội dung.
+- Chế độ truyện tranh: mỗi trang có cảnh vẽ riêng, gợi ý minh họa, cọ/tẩy/màu/tải ảnh.
+- Vật phẩm nền truyện đã mua xuất hiện trực tiếp trong studio.
 
-- Một H1 duy nhất trên mỗi trang; heading có thứ bậc đúng.
-- URL gốc hiện tại: `https://mam-sang-tao.hailong1289.chatgpt.site`.
-- Có thể thay bằng `NEXT_PUBLIC_SITE_URL` khi gắn domain riêng.
-- Mỗi trang công cụ có title, description và canonical riêng.
-- Sitemap gồm các trang nội dung công khai; không đưa đăng nhập/đăng ký vào sitemap.
-- Open Graph dùng ảnh `public/og.png` theo tỷ lệ ngang.
-- Nội dung SEO phải là HTML, không nằm hoàn toàn trong ảnh.
+### 4.4 Lập trình và game
 
-## 7. Yêu cầu kỹ thuật
+- Prompt tự nhận diện loại game; người dùng vẫn có thể chọn thủ công ngay dưới prompt.
+- Sáu loại: Nhặt vật phẩm, Đua về đích, Tìm kho báu, Mê cung, Chạy vượt chướng ngại, Bay qua cổng.
+- Palette khối → vùng chương trình → sắp xếp/kéo thả/xóa → chạy/dừng/đặt lại → tải JSON.
+- Có game platform chạy/nhảy và game bay với trọng lực, va chạm, điểm số, bàn phím.
+- Nhân vật lọc theo luật chơi và bối cảnh prompt; icon tự quay theo hướng di chuyển. Game bay có chim, vẹt, đại bàng, cú, bướm, ong.
+- Nhạc nền Web Audio, khối phát âm thanh, bật/tắt nhạc.
+- Vật phẩm nhân vật và âm thanh đã mua xuất hiện trong dự án.
 
-- vinext/Sites với App Router API, React, TypeScript strict và Tailwind CSS. Vercel/v0 chỉ được dùng để tạo layout mẫu, không phải runtime triển khai.
-- Production build không được bỏ qua lỗi TypeScript.
-- `npx tsc --noEmit` và production build phải thành công trước khi phát hành.
-- Component nhỏ, tên rõ nghĩa; không dồn toàn bộ trang vào một file.
-- Không thêm backend/persistence nếu chưa có quyết định kiến trúc và chính sách dữ liệu trẻ em.
+### 4.5 Âm nhạc và hoạt hình
 
-## 8. Tiêu chí hoàn thành đợt nâng cấp này
+- Âm nhạc: sequencer 8 bước, chọn nhạc cụ, tốc độ, ngẫu nhiên, phát/dừng.
+- Hoạt hình: chọn nhân vật, bối cảnh, chuỗi cảnh, xem thử.
 
-- [x] TypeScript validation được bật và không còn lỗi.
-- [x] Chip gợi ý tự điền đúng ý tưởng.
-- [x] Mobile menu mở/đóng được, đóng khi chọn liên kết và có thuộc tính accessibility.
-- [x] Luồng Tranh có input, style, loading, bốn kết quả và hành động tiếp theo.
-- [x] Bàn vẽ canvas hỗ trợ chuột/cảm ứng, cọ màu, tẩy, hoàn tác, kéo thả sticker và tải PNG.
-- [x] Bàn vẽ mở toàn màn hình, khóa cuộn nền, focus đúng đầu công cụ và có nút thu nhỏ/phóng to.
-- [x] Khi đóng bàn vẽ, cuộn nền được khôi phục và focus quay lại đúng phương án tranh đang chọn.
-- [x] Tiêu đề, dòng phụ, màu chữ, ba vùng nền và vị trí các icon mẫu đều chỉnh sửa độc lập.
-- [x] Luồng Truyện có cấu hình đầu vào, bản nháp nhiều trang, trình sửa trang và tải TXT.
-- [x] Trang truyện mới có gợi ý theo mạch truyện; xưởng hỗ trợ phóng to/thu nhỏ.
-- [x] Có sinh bộ gợi ý khác và chế độ Truyện tranh với khung tự vẽ riêng từng trang.
-- [x] Xưởng Lập trình có palette khối, vùng chương trình, chạy thử sân khấu và tải JSON.
-- [x] Có chế độ Game, tính điểm, điều khiển bàn phím, nhạc nền và khối phát âm thanh.
-- [x] Game bám prompt theo chủ đề và có bốn mẫu luật chơi đơn giản; luồng quay lại focus đúng ô nhập.
-- [x] Có mẫu platform chạy/nhảy và mẫu bay qua cổng với trọng lực, va chạm và tính điểm.
-- [x] Loại game được chọn ngay dưới prompt và xưởng mở trực tiếp đúng giao diện game.
-- [x] Loại game tự cập nhật khi bé nhập prompt, chọn chip gợi ý hoặc mở ý tưởng Lập trình từ URL; lựa chọn thủ công vẫn được giữ cho tới khi ý tưởng đổi.
-- [x] Bé chọn được nhân vật ngay trong xưởng game; danh sách và nhân vật mặc định được lọc đồng thời theo bối cảnh prompt và luật chơi.
-- [x] Nhân vật tự quay theo hướng di chuyển; nhóm game bay có thêm chim, vẹt, đại bàng, cú, bướm và ong.
-- [x] Dải prompt nhanh được chia theo Tranh/Truyện/Lập trình; mỗi tab trong xưởng có gợi ý riêng và tự điền khi chọn.
-- [x] Nút Phóng to/Thu nhỏ luôn hiển thị bên phải hàng tab và áp dụng cho toàn bộ xưởng, kể cả màn hình nhập prompt.
-- [x] Xưởng mở rộng thêm Âm nhạc với bộ phối 8 bước, nhạc cụ và tốc độ; Hoạt hình với nhân vật, bối cảnh, chuỗi cảnh và phát thử.
-- [x] Top menu có Xưởng sáng tạo tại `/xuong-sang-tao` và Khóa học tại `/khoa-hoc`; thư viện gồm năm khóa với trang chi tiết, lộ trình và tiến độ tương tác.
-- [x] Header gọn còn Xưởng sáng tạo, Khóa học và Cách hoạt động; Khóa học có mega-menu khi hover/focus và danh sách con dễ bấm trên mobile, còn Giới thiệu/Liên hệ nằm tại footer.
-- [x] Mega-menu Khóa học đóng ngay sau khi chọn liên kết hoặc nhấn Esc và không tự mở lại cho tới khi con trỏ rời vùng menu.
-- [x] Cả 35 bài trong năm khóa có nội dung riêng gồm mục tiêu, ba bước hướng dẫn, bài thực hành và mẹo phụ huynh; chọn bài mở nội dung trước khi đánh dấu hoàn thành.
-- [x] Chọn bài mở phòng học toàn màn hình có minh họa tương tác, điều hướng bài trước/sau và đóng bằng Esc; Cờ vua có bàn 8×8 kiểm tra nước đi, các khóa khác có bài tập trực quan tương ứng.
-- [x] Phòng học dùng đúng chiều cao viewport, header/footer cố định, bàn thực hành tự co và cột hướng dẫn cuộn độc lập; mobile chuyển sang luồng một cột không che nội dung.
-- [x] Điều hướng bài trước/sau và tiến độ được gom lên header; loại bỏ footer để tăng chiều cao hữu dụng cho khu thực hành.
-- [x] Bàn cờ cho phép đổi lựa chọn khi bấm quân cùng đội; có chế độ trộn bàn, đổi chỗ quân, kiểm tra kết quả, gợi ý ô ngẫu nhiên và khôi phục thế chuẩn.
-- [x] Các bài âm nhạc, vẽ, kể chuyện và lập trình đều có nút tạo thử thách hoặc ý tưởng ngẫu nhiên tương ứng.
-- [x] Trên desktop, trạng thái và công cụ cờ vua xếp thành thanh dọc cạnh bàn để bàn tận dụng tối đa chiều cao; màn hình nhỏ tự chuyển về một cột dễ chạm.
-- [x] Loại bỏ tiêu đề phụ và padding thừa trong vùng thực hành; bàn cờ co theo toàn bộ viewport, nút công cụ lớn hơn và các ô đi hợp lệ được đánh dấu trực quan.
-- [x] Bổ sung trải nghiệm bài học tập trung theo từng nhiệm vụ: trợ giảng hoạt hình nổi trên vùng thực hành, bong bóng hướng dẫn và đọc toàn bài bằng giọng tiếng Việt.
-- [x] Ba thẻ công cụ trên trang chủ mở thẳng đúng tab prompt; mỗi landing page SEO có xưởng tương tác riêng, không dẫn vòng về trang chủ.
-- [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
-- [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.
-- [x] Build production thành công.
+## 5. Khóa học
 
-## 9. Giai đoạn tiếp theo
+### 5.1 Danh mục và cá nhân hóa
 
-- [x] Mỗi khóa có Đấu trường cuối khóa với bài kiểm tra 3 câu, điểm XP, thi với Mầm Bot, kết quả thi lại và bảng xếp hạng thành viên mẫu; sẵn sàng nối dữ liệu tài khoản thật.
-- [x] Mỗi khóa có nhiệm vụ ngày/tuần, chuỗi ngày học, tiến độ, nhận XP và huy hiệu; trạng thái nhiệm vụ trong ngày được giữ trên thiết bị khi người dùng quay lại.
-- [x] Cửa hàng Mầm có ví Hạt Mầm, bộ lọc danh mục, sáu vật phẩm số, xác nhận đổi thưởng, kiểm tra số dư, kho đồ trên thiết bị, metadata và sitemap riêng.
+Có 5 khóa, tổng 35 bài: Cờ vua nhập môn, Âm nhạc vui nhộn, Vẽ nhân vật hoạt hình, Kể chuyện tự tin, Game đầu tiên của bé.
 
-Sau khi bàn vẽ được xác nhận, ưu tiên tích hợp API tạo ảnh có kiểm duyệt đầu vào/đầu ra, rồi bổ sung lưu tác phẩm. Truyện và Blockly được triển khai sau khi luồng Tranh có số liệu sử dụng thực tế.
+Trang `/khoa-hoc` hiện có:
+
+- Onboarding cục bộ: chọn nhóm tuổi 6–7, 8–9 hoặc 10–12 và tối đa 3 sở thích.
+- Sở thích lưu tại `mam-learner-profile-v1`; khóa học tự xếp theo độ phù hợp.
+- Thẻ khóa hiển thị độ tuổi, mức độ, kỹ năng, mô tả, thời lượng, tiến độ và sản phẩm cuối khóa.
+- Nút **Học thử** vào `/khoa-hoc/[slug]?trial=1`, tự mở bài đầu, không bắt đăng nhập.
+- Khối **Tiếp tục hành trình** xuất hiện nếu có khóa đang học dở.
+- Bản đồ năng lực lấy từ tiến độ thật trên thiết bị: Sáng tạo, Logic, Ngôn ngữ, Âm nhạc.
+- CTA báo cáo phụ huynh dẫn tới `/ho-so`.
+
+Metadata trải nghiệm khóa học nằm tại `lib/course-experience.ts`; nội dung 35 bài tại `lib/courses.ts`.
+
+### 5.2 Luồng bài học
+
+- Bản đồ bài dạng gamification; chỉ mở bài tiếp theo khi hoàn thành bài trước.
+- Popup/phòng học toàn màn hình: header tiến độ + tim, vùng nội dung co theo viewport, Escape để đóng.
+- Chu trình: hướng dẫn/giọng Việt → thực hành tương tác → kiểm tra nhanh → kết quả/phần thưởng.
+- Mỗi bài có mục tiêu, 3 bước, bài thực hành và mẹo phụ huynh riêng.
+- Cờ vua có bàn 8×8, nước đi hợp lệ, đổi lựa chọn quân, trộn/xếp chuẩn/gợi ý/kiểm tra.
+- Âm nhạc có sequencer; Vẽ/Truyện/Lập trình có hoạt động trực quan và nút ngẫu nhiên phù hợp.
+- Âm thanh phản hồi đúng/sai/hoàn thành; trợ giảng đọc tiếng Việt và có fallback khi thiết bị thiếu giọng Việt.
+- Kết quả cộng XP, Hạt Mầm, phút học, bài hoàn hảo và streak vào `mam-learning-progress-v2`.
+
+### 5.3 Nhiệm vụ, đấu trường và báo cáo
+
+- Nhiệm vụ ngày/tuần, streak, XP, Hạt Mầm và huy hiệu.
+- Đấu trường cuối khóa: 3 câu, thi với Mầm Bot, kết quả, thi lại, ELO.
+- Bảng xếp hạng riêng `/bang-xep-hang`: top 20, podium top 3, tab Điểm KN/Chuỗi ngày; ưu tiên D1, có dữ liệu fallback local.
+- Hồ sơ hiển thị thống kê, huy hiệu, tác phẩm, nhiệm vụ, cộng đồng, lời thách đấu và dữ liệu phụ huynh.
+
+## 6. Cửa hàng Mầm và inventory
+
+- Tiền tệ: Hạt Mầm; không tiền thật, không mua ngẫu nhiên, không lợi thế thi đấu.
+- Số dư và inventory lưu local (`mam-seeds`, `mam-inventory`).
+- Lọc theo: Tất cả, Sticker, Truyện, Game, Vẽ, Âm nhạc, Hỗ trợ.
+- 18 vật phẩm, mỗi tab 3 bộ:
+  - Sticker: Vũ trụ, Muông thú, Tiệc vui.
+  - Truyện: Đại dương, Rừng cổ tích, Du hành sao.
+  - Game: Chim bay, Khủng long, Thợ lặn.
+  - Vẽ: Hoàng hôn, Kẹo ngọt, Cọ Kim tuyến.
+  - Âm nhạc: Phép thuật, Thiên nhiên, Game vui.
+  - Hỗ trợ: Lá bảo vệ chuỗi, Túi 3 gợi ý, Tim thử lại.
+- Mua có xác nhận, kiểm tra đủ hạt và trạng thái đã sở hữu; kho đồ hiển thị item đã mua.
+- Một số item đã nối trực tiếp vào studio. AI tiếp theo phải nối nốt các ID mới thay vì chỉ để chúng tồn tại trong shop.
+
+## 7. Tài khoản và cộng đồng
+
+- Có `/dang-nhap`, `/dang-ky`, `/ho-so`; đăng nhập Sites/ChatGPT và API community.
+- D1 schema tạo/lazy-init trong `lib/community-db.ts`: `profiles`, `follows`, `challenges` cùng index.
+- Đã seed khoảng 20 thành viên mẫu; có tìm bạn, theo dõi, mời bạn và thách đấu.
+- Profile cộng đồng có XP, seeds, streak, avatar, bio, followers/following và challenge.
+- Không thêm tính năng nhắn tin công khai giữa trẻ em nếu chưa có thiết kế kiểm duyệt/an toàn.
+
+## 8. SEO, accessibility và chất lượng
+
+- Mỗi trang một H1, heading đúng cấp, metadata/canonical riêng.
+- `metadataBase`, Open Graph/Twitter, robots và sitemap dùng cùng URL gốc.
+- Sitemap chỉ chứa trang công khai; đã có `/khoa-hoc`, chi tiết khóa, shop, xưởng và bảng xếp hạng.
+- Nội dung SEO phải là HTML, không đặt hoàn toàn trong ảnh.
+- Hỗ trợ keyboard, focus state, aria-label, Escape, touch; tôn trọng `prefers-reduced-motion`.
+- Dark mode và menu mobile phải tiếp tục hoạt động sau mọi thay đổi header/layout.
+
+## 9. File chịu trách nhiệm chính
+
+| Phạm vi | File |
+|---|---|
+| Header/footer/search/theme | `components/site-header.tsx`, `site-footer.tsx`, `site-search.tsx`, `theme-toggle.tsx` |
+| Prompt/xưởng tổng | `app/studio-demo.tsx`, `components/demo-section.tsx`, `prompt-ideas.ts` |
+| Tranh | `components/drawing-canvas.tsx` |
+| Truyện | `components/story-studio.tsx`, `story-sketch.tsx` |
+| Game/lập trình | `components/coding-studio.tsx` |
+| Âm nhạc/hoạt hình | `components/music-studio.tsx`, `animation-studio.tsx` |
+| Danh mục khóa học | `components/course-discovery.tsx`, `lib/course-experience.ts` |
+| Dữ liệu bài học | `lib/courses.ts` |
+| Luồng học | `components/course-progress.tsx`, `lesson-activity.tsx` |
+| Nhiệm vụ/đấu trường | `components/daily-quests.tsx`, `course-arena.tsx` |
+| Tiến độ/âm thanh | `lib/learning-progress.ts`, `learning-audio.ts` |
+| Shop/inventory | `components/seed-shop.tsx`, `lib/inventory.ts` |
+| Hồ sơ/community | `components/profile-community.tsx`, `profile-showcase.tsx`, `lib/community-db.ts`, `app/api/community/route.ts` |
+| Xếp hạng | `components/leaderboard-board.tsx`, `app/bang-xep-hang/page.tsx` |
+| SEO | `app/layout.tsx`, `sitemap.ts`, `robots.ts`, `lib/site.ts` |
+
+## 10. Trạng thái thật và giới hạn hiện tại
+
+- Tranh/truyện/game hiện sinh nội dung bằng logic/mẫu cục bộ, chưa gọi API AI thật.
+- Canvas chưa phải Excalidraw; khối lệnh chưa phải Blockly/Scratch thật.
+- Tiến độ học, shop và inventory chủ yếu theo thiết bị; community dùng D1.
+- Chưa có thanh toán, email thật hoặc chia sẻ công khai tác phẩm.
+- Dữ liệu fallback/demo phải được phân biệt với dữ liệu thành viên thật.
+- Không tuyên bố hiệu quả giáo dục, “số 1”, khan hiếm hoặc thành tích không có nguồn kiểm chứng.
+
+## 11. Backlog ưu tiên
+
+### P0 — hoàn thiện những gì đã hứa
+
+- [ ] Nối toàn bộ 18 vật phẩm shop vào đúng studio/chức năng; hiện mới có một số bộ legacy được tiêu thụ.
+- [ ] Thay hoạt động trực quan dùng chung bằng bài thực hành riêng theo từng lesson, nhất là 4 khóa ngoài cờ vua.
+- [ ] Đồng bộ tiến độ local với hồ sơ D1 sau đăng nhập, có chiến lược merge rõ ràng.
+- [ ] Rà toàn bộ responsive 360/768/1024/1440 và keyboard focus sau các thay đổi mới.
+
+### P1 — nâng trải nghiệm học
+
+- [ ] Đánh giá đầu vào 5 hoạt động vui và sinh lộ trình theo kết quả, không dùng bài thi nặng nề.
+- [ ] Ôn tập thích ứng: ưu tiên dạng bài sai, giảm bài đã thành thạo.
+- [ ] Báo cáo tuần cho phụ huynh: thời gian, kỹ năng, điểm cần hỗ trợ, tác phẩm mới.
+- [ ] Hoạt động ngoài màn hình cho từng bài (giấy, đồ vật, vận động).
+- [ ] Ghi âm kể chuyện/phát âm chỉ khi có consent và thiết kế dữ liệu trẻ em phù hợp.
+
+### P2 — AI thật
+
+- [ ] API tạo ảnh có kiểm duyệt prompt/ảnh đầu ra và giới hạn phù hợp trẻ em.
+- [ ] Lưu tác phẩm cloud riêng tư, quyền xóa/xuất dữ liệu cho phụ huynh.
+- [ ] Cân nhắc tích hợp Excalidraw/Blockly sau khi xác nhận yêu cầu và đo usage thực tế.
+
+## 12. Quy trình làm việc và review từ thời điểm này
+
+1. AI triển khai phải đọc `AGENTS.md` + `Spec.md`, kiểm tra worktree và không ghi đè thay đổi người khác.
+2. Mỗi task ghi rõ: phạm vi, file thay đổi, acceptance criteria, kiểm thử đã chạy và ảnh/video nếu là lỗi UI.
+3. Không tự mở rộng sang tính năng khác; mọi thay đổi dữ liệu trẻ em, thanh toán, chia sẻ hoặc quyền truy cập cần phê duyệt riêng.
+4. Khi báo hoàn thành, cung cấp commit SHA và danh sách điểm cần reviewer chú ý.
+5. Vai trò Codex chính từ đây: **chỉ review sau khi AI khác báo làm xong**, trừ khi người dùng yêu cầu trực tiếp Codex triển khai.
+6. Review phải kiểm tra: đúng Spec, regression, TypeScript/lint/build, mobile/accessibility, dữ liệu/an toàn trẻ em, SEO và khả năng phát hành Sites.
+
+## 13. Definition of Done
+
+- [ ] Acceptance criteria của task được đáp ứng và có bằng chứng.
+- [ ] Không phá luồng Tranh/Truyện/Game/Khóa học/Shop/Profile hiện có.
+- [ ] TypeScript, lint, production build đạt.
+- [ ] Không stage file ngoài phạm vi hoặc log/local artifact.
+- [ ] Keyboard, touch, mobile và focus được kiểm tra tương xứng rủi ro.
+- [ ] Metadata/sitemap cập nhật nếu thêm route công khai.
+- [ ] GitHub và Sites chỉ được đồng bộ/phát hành khi người dùng yêu cầu hoặc workflow task đã quy định.
