@@ -6,15 +6,19 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { DrawingCanvas } from '@/components/drawing-canvas'
 import { StoryStudio } from '@/components/story-studio'
 import { CodingStudio, GAME_OPTIONS, gameFromIdea, type GameChoice } from '@/components/coding-studio'
+import { MusicStudio } from '@/components/music-studio'
+import { AnimationStudio } from '@/components/animation-studio'
 import { promptsFor } from '@/components/prompt-ideas'
 
-type Mode = 'tranh' | 'truyen' | 'laptrinh'
-type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'coding-editor'
+type Mode = 'tranh' | 'truyen' | 'laptrinh' | 'amnhac' | 'hoathinh'
+type Phase = 'form' | 'loading' | 'results' | 'editor' | 'story-editor' | 'coding-editor' | 'music-editor' | 'animation-editor'
 
 const MODES: { id: Mode; label: string; icon: string }[] = [
   { id: 'tranh', label: 'Tranh', icon: '🎨' },
   { id: 'truyen', label: 'Truyện', icon: '📖' },
   { id: 'laptrinh', label: 'Lập trình', icon: '🧩' },
+  { id: 'amnhac', label: 'Âm nhạc', icon: '🎵' },
+  { id: 'hoathinh', label: 'Hoạt hình', icon: '🎬' },
 ]
 
 const STYLES = ['Hoạt hình', 'Màu nước', 'Giấy cắt', 'Tranh tô màu'] as const
@@ -82,6 +86,10 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
       setPhase('loading')
     } else if (mode === 'truyen') {
       setPhase('story-editor')
+    } else if (mode === 'amnhac') {
+      setPhase('music-editor')
+    } else if (mode === 'hoathinh') {
+      setPhase('animation-editor')
     } else {
       setPhase('coding-editor')
     }
@@ -176,6 +184,10 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
         <StoryStudio idea={idea} character={storyCharacter} setting={storySetting} tone={storyTone} onReset={reset} />
       ) : phase === 'coding-editor' ? (
         <CodingStudio idea={idea} initialGame={codingGame} onReset={reset} />
+      ) : phase === 'music-editor' ? (
+        <MusicStudio idea={idea} onReset={reset} />
+      ) : phase === 'animation-editor' ? (
+        <AnimationStudio idea={idea} onReset={reset} />
       ) : phase === 'results' ? (
         <div className="mt-7">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -214,7 +226,7 @@ export function StudioDemo({ initialMode = 'tranh' }: { initialMode?: Mode }) {
           {mode === 'tranh' ? <fieldset className="mt-5"><legend className="text-sm font-extrabold">Chọn phong cách</legend><div className="mt-2 flex flex-wrap gap-2">{STYLES.map((item) => <button key={item} type="button" onClick={() => setStyle(item)} aria-pressed={style === item} className={`min-h-11 rounded-full px-4 text-sm font-bold ${style === item ? 'bg-violet text-white' : 'bg-cream text-ink/70 hover:text-blue'}`}>{item}</button>)}</div></fieldset> : null}
           {mode === 'truyen' ? <div className="mt-5 grid gap-3 sm:grid-cols-3"><label className="text-sm font-extrabold">Nhân vật<input value={storyCharacter} onChange={(event) => setStoryCharacter(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Bối cảnh<input value={storySetting} onChange={(event) => setStorySetting(event.target.value)} className="field mt-2" /></label><label className="text-sm font-extrabold">Giọng kể<select value={storyTone} onChange={(event) => setStoryTone(event.target.value)} className="field mt-2"><option>ấm áp</option><option>hài hước</option><option>phiêu lưu</option><option>bí ẩn</option></select></label></div> : null}
           {mode === 'laptrinh' ? <fieldset className="mt-5"><legend className="text-sm font-extrabold">Chọn loại game sẽ mở</legend><div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"><button type="button" onClick={() => setCodingGame('auto')} aria-pressed={codingGame === 'auto'} className={`min-h-12 rounded-xl px-3 text-left text-sm font-extrabold ${codingGame === 'auto' ? 'bg-blue text-white' : 'bg-cream text-ink'}`}>✨ Tự nhận diện từ ý tưởng</button>{GAME_OPTIONS.map((game) => <button key={game.id} type="button" onClick={() => setCodingGame(game.id)} aria-pressed={codingGame === game.id} className={`min-h-12 rounded-xl px-3 text-left text-sm font-extrabold ${codingGame === game.id ? 'bg-blue text-white' : 'bg-cream text-ink'}`}>{game.icon} {game.label}</button>)}</div><p className="mt-2 text-xs text-ink/55">Game đã chọn sẽ mở trực tiếp; bé vẫn có thể đổi loại trong xưởng.</p></fieldset> : null}
-          <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-ink/55">Mô tả nhân vật, màu sắc hoặc nơi câu chuyện diễn ra.</p><button type="submit" className="btn btn-coral w-full justify-center sm:w-auto">{mode === 'tranh' ? 'Tạo 4 tranh mẫu' : 'Tạo dự án'}<Sparkles className="h-4 w-4" /></button></div>
+          <div className="mt-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"><p className="text-sm text-ink/55">{mode === 'amnhac' ? 'Mô tả cảm xúc hoặc khung cảnh cho giai điệu.' : mode === 'hoathinh' ? 'Mô tả nhân vật, bối cảnh và hành động.' : 'Mô tả nhân vật, màu sắc hoặc nơi câu chuyện diễn ra.'}</p><button type="submit" className="btn btn-coral w-full justify-center sm:w-auto">{mode === 'tranh' ? 'Tạo 4 tranh mẫu' : mode === 'amnhac' ? 'Mở bàn phối nhạc' : mode === 'hoathinh' ? 'Mở xưởng hoạt hình' : 'Tạo dự án'}<Sparkles className="h-4 w-4" /></button></div>
         </form>
       )}
       </div>
