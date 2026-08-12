@@ -113,6 +113,7 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 - [x] Nút Phóng to/Thu nhỏ luôn hiển thị bên phải hàng tab và áp dụng cho toàn bộ xưởng, kể cả màn hình nhập prompt.
 - [x] Xưởng mở rộng thêm Âm nhạc với bộ phối 8 bước, nhạc cụ và tốc độ; Hoạt hình với nhân vật, bối cảnh, chuỗi cảnh và phát thử.
 - [x] Top menu có Xưởng sáng tạo tại `/xuong-sang-tao` và Khóa học tại `/khoa-hoc`; thư viện gồm năm khóa với trang chi tiết, lộ trình và tiến độ tương tác.
+- [x] Header gọn còn Xưởng sáng tạo, Khóa học và Cách hoạt động; Khóa học có mega-menu khi hover/focus và danh sách con dễ bấm trên mobile, còn Giới thiệu/Liên hệ nằm tại footer.
 - [x] Ba thẻ công cụ trên trang chủ mở thẳng đúng tab prompt; mỗi landing page SEO có xưởng tương tác riêng, không dẫn vòng về trang chủ.
 - [x] Metadata có `metadataBase`, canonical, Twitter/Open Graph đúng.
 - [x] Sitemap/robots dùng cùng URL gốc và bao phủ trang công khai.

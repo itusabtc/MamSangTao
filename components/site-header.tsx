@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { LogIn, Menu, Star, X } from 'lucide-react'
+import { ChevronDown, GraduationCap, LogIn, Menu, Star, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { BrandLogo } from '@/components/brand-logo'
 import { SiteSearch } from '@/components/site-search'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { COURSES } from '@/lib/courses'
 
 type SiteHeaderProps = { variant?: 'home' | 'page' }
 type NavItem = { label: string; href: string }
@@ -15,10 +16,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   const prefix = variant === 'home' ? '' : '/'
   const navItems: NavItem[] = [
     { label: 'Xưởng sáng tạo', href: '/xuong-sang-tao' },
-    { label: 'Khóa học', href: '/khoa-hoc' },
     { label: 'Cách hoạt động', href: `${prefix}#cach-hoat-dong` },
-    { label: 'Giới thiệu', href: '/gioi-thieu' },
-    { label: 'Liên hệ', href: '/lien-he' },
   ]
 
   useEffect(() => {
@@ -36,7 +34,21 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
         <div className="flex shrink-0 items-center"><BrandLogo size={46} /></div>
 
         <nav aria-label="Điều hướng chính" className="hidden flex-1 items-center justify-center gap-1 min-[901px]:flex">
-          {navItems.map((item) => (
+          <Link href={navItems[0].href} className="group relative whitespace-nowrap rounded-lg px-3.5 py-2 text-[16px] font-bold text-ink/85 transition-colors hover:text-blue">
+            {navItems[0].label}<span className="pointer-events-none absolute inset-x-3.5 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-blue transition-transform duration-200 group-hover:scale-x-100" />
+          </Link>
+          <div className="group relative">
+            <Link href="/khoa-hoc" className="inline-flex whitespace-nowrap items-center gap-1 rounded-lg px-3.5 py-2 text-[16px] font-bold text-ink/85 transition-colors hover:text-blue focus:text-blue">
+              Khóa học<ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
+            </Link>
+            <div className="invisible absolute left-1/2 top-full w-[620px] -translate-x-1/2 pt-3 opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <div className="rounded-3xl border border-hairline bg-white p-4 shadow-2xl">
+                <div className="grid grid-cols-2 gap-2">{COURSES.map((course) => <Link key={course.slug} href={`/khoa-hoc/${course.slug}`} className="flex items-center gap-3 rounded-2xl p-3 transition hover:bg-cream focus:bg-cream"><span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl text-2xl ${course.color}`}>{course.icon}</span><span><strong className="block text-sm text-ink">{course.title}</strong><small className="text-xs text-ink/55">{course.age}</small></span></Link>)}</div>
+                <Link href="/khoa-hoc" className="mt-3 flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue px-4 text-sm font-extrabold text-white"><GraduationCap className="h-4 w-4" />Xem tất cả khóa học</Link>
+              </div>
+            </div>
+          </div>
+          {navItems.slice(1).map((item) => (
             <Link key={item.label} href={item.href} className="group relative rounded-lg px-3.5 py-2 text-[16px] font-bold text-ink/85 transition-colors hover:text-blue">
               {item.label}
               <span className="pointer-events-none absolute inset-x-3.5 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full bg-blue transition-transform duration-200 group-hover:scale-x-100" />
@@ -69,11 +81,9 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
       {menuOpen ? (
         <nav id="mobile-navigation" aria-label="Điều hướng trên điện thoại" className="border-t border-hairline bg-surface px-5 py-4 shadow-lg min-[901px]:hidden">
           <div className="mx-auto grid max-w-lg gap-2">
-            {navItems.map((item) => (
-              <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">
-                {item.label}
-              </Link>
-            ))}
+            <Link href={navItems[0].href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{navItems[0].label}</Link>
+            <div className="rounded-2xl bg-cream p-2"><Link href="/khoa-hoc" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center gap-2 rounded-xl px-3 text-base font-extrabold text-blue"><GraduationCap className="h-5 w-5" />Khóa học</Link><div className="grid gap-1 sm:grid-cols-2">{COURSES.map((course) => <Link key={course.slug} href={`/khoa-hoc/${course.slug}`} onClick={() => setMenuOpen(false)} className="flex min-h-11 items-center gap-2 rounded-xl bg-white px-3 text-sm font-bold text-ink"><span>{course.icon}</span>{course.title}</Link>)}</div></div>
+            <Link href={navItems[1].href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{navItems[1].label}</Link>
             <Link href="/danh-gia" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">Đánh giá</Link>
             <Link href="/dang-nhap" onClick={() => setMenuOpen(false)} className="btn btn-primary mt-2 justify-center sm:hidden"><LogIn className="h-5 w-5" />Đăng nhập</Link>
           </div>
