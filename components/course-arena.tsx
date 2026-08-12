@@ -3,14 +3,14 @@
 import { Crown, Medal, Play, RotateCcw, Swords, Trophy, Wifi } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { playLearningSound, speakVietnamese } from '@/lib/learning-audio'
-import { readProgress, recordMatch } from '@/lib/learning-progress'
+import { DEFAULT_PROGRESS, readProgress, recordMatch } from '@/lib/learning-progress'
 import { CHALLENGE_AGENTS, closestChallengeAgent } from '@/lib/challenge-agents'
 
 type Props = { courseTitle: string; courseIcon: string; lessons: readonly { title: string; goal: string }[] }
 const PLAYERS = [['Bảo An','🦊',980],['Minh Khang','🐯',910],['Hà My','🐰',860],['Gia Huy','🐼',790]] as const
 
 export function CourseArena({ courseTitle, courseIcon, lessons }: Props) {
-  const initial=readProgress(), initialAgent=closestChallengeAgent(initial.elo)
+  const initial=DEFAULT_PROGRESS, initialAgent=closestChallengeAgent(initial.elo)
   const [mode,setMode]=useState<'home'|'quiz'|'result'>('home'),[step,setStep]=useState(0),[score,setScore]=useState(0),[picked,setPicked]=useState<number|null>(null)
   const [stats,setStats]=useState(initial),[agentId,setAgentId]=useState(initialAgent.id),[outcome,setOutcome]=useState<{won:boolean;score:number;ratingChange:number;xp:number;seeds:number}|null>(null)
   useEffect(()=>{const current=readProgress();setStats(current);const requested=new URLSearchParams(window.location.search).get('agent');if(requested&&CHALLENGE_AGENTS.some(a=>a.id===requested))setAgentId(requested);else setAgentId(closestChallengeAgent(current.elo).id)},[])

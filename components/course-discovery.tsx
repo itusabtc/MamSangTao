@@ -6,14 +6,14 @@ import { ArrowRight, Check, Clock3, Compass, Play, RotateCcw, ShieldCheck, Spark
 import { useEffect, useMemo, useState } from 'react'
 import { COURSES } from '@/lib/courses'
 import { COURSE_EXPERIENCE, INTERESTS } from '@/lib/course-experience'
-import { readProgress, type LearningProgress } from '@/lib/learning-progress'
+import { DEFAULT_PROGRESS, readProgress, type LearningProgress } from '@/lib/learning-progress'
 
 type LearnerProfile = { age: string; interests: string[] }
 const PROFILE_KEY = 'mam-learner-profile-v1'
 
 export function CourseDiscovery() {
   const [profile, setProfile] = useState<LearnerProfile | null>(null), [draftAge, setDraftAge] = useState('8–9'), [draftInterests, setDraftInterests] = useState<string[]>([])
-  const [progress, setProgress] = useState<LearningProgress>(() => readProgress())
+  const [progress, setProgress] = useState<LearningProgress>(DEFAULT_PROGRESS)
   useEffect(() => { try { const saved = localStorage.getItem(PROFILE_KEY); if (saved) setProfile(JSON.parse(saved) as LearnerProfile) } catch { localStorage.removeItem(PROFILE_KEY) } const update = () => setProgress(readProgress()); window.addEventListener('mam-progress', update); return () => window.removeEventListener('mam-progress', update) }, [])
   const ranked = useMemo(() => [...COURSES].sort((a, b) => profile ? COURSE_EXPERIENCE[b.slug].interests.filter(x => profile.interests.includes(x)).length - COURSE_EXPERIENCE[a.slug].interests.filter(x => profile.interests.includes(x)).length : 0), [profile])
   const activeCourse = COURSES.find(course => { const done = progress.completedLessons[course.slug]?.length || 0; return done > 0 && done < course.lessons.length })

@@ -151,6 +151,7 @@ Metadata trải nghiệm khóa học nằm tại `lib/course-experience.ts`; n�
 - Nội dung SEO phải là HTML, không đặt hoàn toàn trong ảnh.
 - Hỗ trợ keyboard, focus state, aria-label, Escape, touch; tôn trọng `prefers-reduced-motion`.
 - Dark mode và menu mobile phải tiếp tục hoạt động sau mọi thay đổi header/layout.
+- Component đọc tiến độ từ `localStorage` phải render `DEFAULT_PROGRESS` ở lượt server/client đầu tiên, sau đó nạp dữ liệu thiết bị trong `useEffect`; không gọi `readProgress()` làm giá trị khởi tạo state vì sẽ gây hydration mismatch.
 
 ## 9. File chịu trách nhiệm chính
 

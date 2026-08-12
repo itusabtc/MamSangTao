@@ -3,11 +3,11 @@
 import { CalendarDays, CheckCircle2, Flame, Gift, Trophy } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { playLearningSound, speakVietnamese } from '@/lib/learning-audio'
-import { readProgress, type LearningProgress, writeProgress } from '@/lib/learning-progress'
+import { DEFAULT_PROGRESS, readProgress, type LearningProgress, writeProgress } from '@/lib/learning-progress'
 
 export function DailyQuests({ courseSlug, completedCount }: { courseSlug: string; completedCount: number }) {
   void courseSlug
-  const [progress, setProgress] = useState<LearningProgress>(() => readProgress())
+  const [progress, setProgress] = useState<LearningProgress>(DEFAULT_PROGRESS)
   const [claimed, setClaimed] = useState<string[]>([])
   useEffect(() => {
     setProgress(readProgress())
