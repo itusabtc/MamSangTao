@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  keywords: ['vẽ tranh cho trẻ em', 'tạo truyện cho bé', 'lập trình trẻ em', 'hoạt động sáng tạo cho bé'],
+  keywords: ['vẽ tranh cho trẻ em', 'tạo truyện cho bé', 'lập trình trẻ em', 'khóa học cờ vua cho bé', 'khóa học âm nhạc trẻ em', 'hoạt động sáng tạo cho bé'],
   alternates: { canonical: '/' },
   robots: {
     index: true,

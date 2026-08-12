@@ -12,6 +12,8 @@ type SearchItem = {
 }
 
 const ITEMS: SearchItem[] = [
+  { title: 'Xưởng sáng tạo', desc: 'Vẽ, kể chuyện, làm game, phối nhạc và hoạt hình.', href: '/xuong-sang-tao', group: 'Khám phá' },
+  { title: 'Khóa học cho bé', desc: 'Cờ vua, âm nhạc, vẽ, kể chuyện và lập trình.', href: '/khoa-hoc', group: 'Khóa học' },
   {
     title: 'Vẽ tranh từ ý tưởng',
     desc: 'Biến một câu mô tả thành tranh minh hoạ đầy màu sắc.',

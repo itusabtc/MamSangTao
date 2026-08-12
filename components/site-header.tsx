@@ -14,7 +14,8 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const prefix = variant === 'home' ? '' : '/'
   const navItems: NavItem[] = [
-    { label: 'Công cụ', href: `${prefix}#cong-cu` },
+    { label: 'Xưởng sáng tạo', href: '/xuong-sang-tao' },
+    { label: 'Khóa học', href: '/khoa-hoc' },
     { label: 'Cách hoạt động', href: `${prefix}#cach-hoat-dong` },
     { label: 'Giới thiệu', href: '/gioi-thieu' },
     { label: 'Liên hệ', href: '/lien-he' },

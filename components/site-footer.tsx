@@ -5,7 +5,8 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
   {
     heading: 'Khám phá',
     links: [
-      { label: 'Công cụ', href: '/#cong-cu' },
+      { label: 'Xưởng sáng tạo', href: '/xuong-sang-tao' },
+      { label: 'Khóa học', href: '/khoa-hoc' },
       { label: 'Cách hoạt động', href: '/#cach-hoat-dong' },
       { label: 'Đánh giá', href: '/danh-gia' },
     ],
