@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Circle, Lightbulb, L
 import { useEffect, useRef, useState } from 'react'
 import type { Lesson } from '@/lib/courses'
 import { LessonActivity } from '@/components/lesson-activity'
+import { CourseArena } from '@/components/course-arena'
 
 export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: readonly Lesson[]; courseSlug: string; courseIcon: string }) {
   const [completed, setCompleted] = useState<number[]>([])
@@ -33,6 +34,7 @@ export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: r
     <ol className="mt-5 space-y-3">{lessons.map((lesson, index) => { const itemDone = completed.includes(index); return <li key={lesson.title}><button type="button" onClick={() => setSelected(index)} className={`flex min-h-16 w-full items-center gap-3 rounded-2xl border p-3 text-left font-extrabold transition ${itemDone ? 'border-green bg-green-soft text-blue' : 'border-hairline bg-cream/50 hover:border-blue hover:bg-blue/5'}`}>{itemDone ? <CheckCircle2 className="h-6 w-6 shrink-0 text-green" /> : <Circle className="h-6 w-6 shrink-0 text-ink/30" />}<span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-sm">{index + 1}</span><span className="flex-1">{lesson.title}</span><ChevronRight className="h-5 w-5 shrink-0" /></button></li> })}</ol>
     {completed.length ? <button type="button" onClick={() => setCompleted([])} className="btn mt-5"><RotateCcw className="h-4 w-4" />Đặt lại tiến độ</button> : null}
     <p className="mt-4 text-xs text-ink/55">Tiến độ hiện chỉ lưu trong phiên đang mở trên thiết bị này.</p>
+    <div className="mt-8"><CourseArena courseTitle="Cuối khóa" courseIcon={courseIcon} lessons={lessons}/></div>
 
     {active && selected !== null ? <div className="fixed inset-0 z-[110] bg-[#eef5ef]" role="dialog" aria-modal="true" aria-labelledby="lesson-dialog-title">
       <div className="grid h-dvh w-full grid-rows-[auto_minmax(0,1fr)] bg-white">
