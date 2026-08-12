@@ -18,6 +18,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
   const prefix = variant === 'home' ? '' : '/'
   const navItems: NavItem[] = [
     { label: 'Xưởng sáng tạo', href: '/xuong-sang-tao' },
+    { label: 'Cửa hàng Mầm', href: '/cua-hang-mam' },
     { label: 'Cách hoạt động', href: `${prefix}#cach-hoat-dong` },
   ]
 
@@ -89,7 +90,7 @@ export function SiteHeader({ variant = 'home' }: SiteHeaderProps) {
           <div className="mx-auto grid max-w-lg gap-2">
             <Link href={navItems[0].href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{navItems[0].label}</Link>
             <div className="rounded-2xl bg-cream p-2"><Link href="/khoa-hoc" onClick={() => setMenuOpen(false)} className="flex min-h-12 items-center gap-2 rounded-xl px-3 text-base font-extrabold text-blue"><GraduationCap className="h-5 w-5" />Khóa học</Link><div className="grid gap-1 sm:grid-cols-2">{COURSES.map((course) => <Link key={course.slug} href={`/khoa-hoc/${course.slug}`} onClick={() => setMenuOpen(false)} className="flex min-h-11 items-center gap-2 rounded-xl bg-white px-3 text-sm font-bold text-ink"><span>{course.icon}</span>{course.title}</Link>)}</div></div>
-            <Link href={navItems[1].href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{navItems[1].label}</Link>
+            {navItems.slice(1).map(item=><Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">{item.label}</Link>)}
             <Link href="/danh-gia" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-base font-extrabold text-ink hover:bg-cream hover:text-blue">Đánh giá</Link>
             <Link href="/dang-nhap" onClick={() => setMenuOpen(false)} className="btn btn-primary mt-2 justify-center sm:hidden"><LogIn className="h-5 w-5" />Đăng nhập</Link>
           </div>

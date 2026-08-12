@@ -8,6 +8,7 @@ const routes = [
   { path: '/cong-cu/lap-trinh-cho-tre-em', frequency: 'weekly' as const, priority: 0.9 },
   { path: '/xuong-sang-tao', frequency: 'weekly' as const, priority: 0.95 },
   { path: '/khoa-hoc', frequency: 'weekly' as const, priority: 0.9 },
+  { path: '/cua-hang-mam', frequency: 'weekly' as const, priority: 0.85 },
   { path: '/khoa-hoc/co-vua-cho-be', frequency: 'monthly' as const, priority: 0.8 },
   { path: '/khoa-hoc/am-nhac-vui-nhon', frequency: 'monthly' as const, priority: 0.8 },
   { path: '/khoa-hoc/ve-nhan-vat-hoat-hinh', frequency: 'monthly' as const, priority: 0.8 },

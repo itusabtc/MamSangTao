@@ -133,5 +133,6 @@ Mầm Sáng Tạo là xưởng sáng tạo số an toàn cho trẻ 6–12 tuổi
 
 - [x] Mỗi khóa có Đấu trường cuối khóa với bài kiểm tra 3 câu, điểm XP, thi với Mầm Bot, kết quả thi lại và bảng xếp hạng thành viên mẫu; sẵn sàng nối dữ liệu tài khoản thật.
 - [x] Mỗi khóa có nhiệm vụ ngày/tuần, chuỗi ngày học, tiến độ, nhận XP và huy hiệu; trạng thái nhiệm vụ trong ngày được giữ trên thiết bị khi người dùng quay lại.
+- [x] Cửa hàng Mầm có ví Hạt Mầm, bộ lọc danh mục, sáu vật phẩm số, xác nhận đổi thưởng, kiểm tra số dư, kho đồ trên thiết bị, metadata và sitemap riêng.
 
 Sau khi bàn vẽ được xác nhận, ưu tiên tích hợp API tạo ảnh có kiểm duyệt đầu vào/đầu ra, rồi bổ sung lưu tác phẩm. Truyện và Blockly được triển khai sau khi luồng Tranh có số liệu sử dụng thực tế.
