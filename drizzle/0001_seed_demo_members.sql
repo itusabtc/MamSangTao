@@ -1,0 +1,22 @@
+INSERT OR IGNORE INTO profiles (user_id,email,display_name,username,avatar,bio,xp,seeds,streak,joined_at) VALUES
+('demo_bao_an','bao.an@example.invalid','Bảo An','baoan_mam','🦊','Thích cờ vua và những câu đố vui.',1280,520,12,'2026-07-01T08:00:00Z'),
+('demo_minh_khang','minh.khang@example.invalid','Minh Khang','minhkhang_code','🐯','Mình đang làm trò chơi đầu tiên!',1160,470,9,'2026-07-02T08:00:00Z'),
+('demo_ha_my','ha.my@example.invalid','Hà My','hamy_kechuyen','🐰','Yêu kể chuyện và vẽ cầu vồng.',1080,430,15,'2026-07-03T08:00:00Z'),
+('demo_gia_huy','gia.huy@example.invalid','Gia Huy','giahuy_covua','🐼','Mỗi ngày học thêm một nước cờ.',990,410,7,'2026-07-04T08:00:00Z'),
+('demo_linh_chi','linh.chi@example.invalid','Linh Chi','linhchi_amnhac','🎵','Mê piano, nhịp điệu và ca hát.',940,390,11,'2026-07-05T08:00:00Z'),
+('demo_duc_minh','duc.minh@example.invalid','Đức Minh','ducminh_robot','🤖','Thích robot và lập trình bằng khối.',890,365,6,'2026-07-06T08:00:00Z'),
+('demo_ngoc_anh','ngoc.anh@example.invalid','Ngọc Anh','ngocanh_ve','🎨','Vẽ động vật và những hành tinh xa.',850,350,10,'2026-07-07T08:00:00Z'),
+('demo_tuan_kiet','tuan.kiet@example.invalid','Tuấn Kiệt','tuankiet_game','🦖','Đang tạo game khủng long phiêu lưu.',820,340,5,'2026-07-08T08:00:00Z'),
+('demo_khanh_an','khanh.an@example.invalid','Khánh An','khanhan_sangtao','🌈','Thích biến ý tưởng thành truyện tranh.',790,325,8,'2026-07-09T08:00:00Z'),
+('demo_hoang_long','hoang.long@example.invalid','Hoàng Long','hoanglong_bay','🦅','Phi công nhí mê game bay qua cổng.',760,310,4,'2026-07-10T08:00:00Z'),
+('demo_thao_nguyen','thao.nguyen@example.invalid','Thảo Nguyên','thaonguyen_mam','🌻','Yêu thiên nhiên và những bài hát vui.',730,300,13,'2026-07-11T08:00:00Z'),
+('demo_quang_anh','quang.anh@example.invalid','Quang Anh','quanganh_me_cung','🧭','Chuyên gia tìm đường trong mê cung.',700,285,3,'2026-07-12T08:00:00Z'),
+('demo_phuong_anh','phuong.anh@example.invalid','Phương Anh','phuonganh_truyen','📚','Mỗi tuần viết một câu chuyện mới.',670,275,7,'2026-07-13T08:00:00Z'),
+('demo_nam_phong','nam.phong@example.invalid','Nam Phong','namphong_duaxe','🏎️','Thích đua xe và giải toán nhanh.',640,260,2,'2026-07-14T08:00:00Z'),
+('demo_mai_anh','mai.anh@example.invalid','Mai Anh','maianh_hoathinh','🦄','Ước mơ làm họa sĩ hoạt hình.',610,250,9,'2026-07-15T08:00:00Z'),
+('demo_hai_dang','hai.dang@example.invalid','Hải Đăng','haidang_khobau','🏴‍☠️','Nhà thám hiểm săn kho báu đại dương.',580,240,5,'2026-07-16T08:00:00Z'),
+('demo_yen_nhi','yen.nhi@example.invalid','Yến Nhi','yennhi_nhac','🎹','Học nhạc bằng những phím màu sắc.',550,225,6,'2026-07-17T08:00:00Z'),
+('demo_trong_nhan','trong.nhan@example.invalid','Trọng Nhân','trongnhan_chess','♟️','Luôn sẵn sàng cho một ván cờ vui.',520,210,4,'2026-07-18T08:00:00Z'),
+('demo_bich_ngoc','bich.ngoc@example.invalid','Bích Ngọc','bichngoc_mau','🌸','Thích phối màu và trang trí truyện.',490,200,3,'2026-07-19T08:00:00Z'),
+('demo_an_khang','an.khang@example.invalid','An Khang','ankhang_space','🚀','Khám phá vũ trụ bằng game tự làm.',460,190,2,'2026-07-20T08:00:00Z');
+PRAGMA optimize;
