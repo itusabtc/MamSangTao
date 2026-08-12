@@ -6,12 +6,14 @@ import type { Lesson } from '@/lib/courses'
 import { LessonActivity } from '@/components/lesson-activity'
 import { CourseArena } from '@/components/course-arena'
 import { DailyQuests } from '@/components/daily-quests'
+import { playLearningSound, setAudioEnabled } from '@/lib/learning-audio'
 
 export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: readonly Lesson[]; courseSlug: string; courseIcon: string }) {
   const [completed, setCompleted] = useState<number[]>([])
   const [selected, setSelected] = useState<number | null>(null)
   const [voiceOn, setVoiceOn] = useState(false)
   const [voiceMessage, setVoiceMessage] = useState('')
+  const [soundOn, setSoundOn] = useState(true)
   const closeRef = useRef<HTMLButtonElement>(null)
   const percent = Math.round((completed.length / lessons.length) * 100)
   const active = selected === null ? null : lessons[selected]
@@ -25,7 +27,8 @@ export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: r
     return () => { document.body.style.overflow = oldOverflow; document.removeEventListener('keydown', onKey) }
   }, [selected])
 
-  function toggleCompleted() { if(selected===null)return; setCompleted((items) => done ? items.filter((item) => item !== selected) : [...items, selected]) }
+  function toggleCompleted() { if(selected===null)return; if(!done)playLearningSound('complete'); setCompleted((items) => done ? items.filter((item) => item !== selected) : [...items, selected]) }
+  function toggleSound(){const next=!soundOn;setSoundOn(next);setAudioEnabled(next);if(next)playLearningSound('correct')}
   function speakLesson(turnOn=true){
     if(!active||typeof window==='undefined'||!('speechSynthesis' in window))return
     const synth=window.speechSynthesis
@@ -52,6 +55,7 @@ export function CourseProgress({ lessons, courseSlug, courseIcon }: { lessons: r
     <div className="flex items-center justify-between gap-4"><div><p className="kicker">Lộ trình học</p><h2 id="lesson-title" className="mt-2 text-2xl">Bài học của bé</h2></div><strong className="rounded-full bg-green-soft px-4 py-2 text-sm text-blue">{percent}% hoàn thành</strong></div>
     <div className="mt-4 h-3 overflow-hidden rounded-full bg-cream"><div className="h-full rounded-full bg-green transition-all" style={{ width: `${percent}%` }} /></div>
     <p className="mt-4 rounded-2xl bg-blue/5 px-4 py-3 text-sm font-bold text-blue">Chọn một bài để mở phòng học toàn màn hình có hướng dẫn và thực hành tương tác.</p>
+    <button type="button" onClick={toggleSound} aria-pressed={soundOn} className="btn mt-3 border border-hairline bg-white">{soundOn?<Volume2 className="h-4 w-4"/>:<VolumeX className="h-4 w-4"/>}Âm thanh tương tác: {soundOn?'Bật':'Tắt'}</button>
     <ol className="mt-5 space-y-3">{lessons.map((lesson, index) => { const itemDone = completed.includes(index); return <li key={lesson.title}><button type="button" onClick={() => setSelected(index)} className={`flex min-h-16 w-full items-center gap-3 rounded-2xl border p-3 text-left font-extrabold transition ${itemDone ? 'border-green bg-green-soft text-blue' : 'border-hairline bg-cream/50 hover:border-blue hover:bg-blue/5'}`}>{itemDone ? <CheckCircle2 className="h-6 w-6 shrink-0 text-green" /> : <Circle className="h-6 w-6 shrink-0 text-ink/30" />}<span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-sm">{index + 1}</span><span className="flex-1">{lesson.title}</span><ChevronRight className="h-5 w-5 shrink-0" /></button></li> })}</ol>
     {completed.length ? <button type="button" onClick={() => setCompleted([])} className="btn mt-5"><RotateCcw className="h-4 w-4" />Đặt lại tiến độ</button> : null}
     <p className="mt-4 text-xs text-ink/55">Tiến độ hiện chỉ lưu trong phiên đang mở trên thiết bị này.</p>
