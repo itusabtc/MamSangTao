@@ -36,9 +36,10 @@ export function speakVietnamese(text: string) {
   const synth = window.speechSynthesis
   const voices = synth.getVoices()
   const voice = voices.find(item => item.lang.toLowerCase() === 'vi-vn') ?? voices.find(item => item.lang.toLowerCase().startsWith('vi'))
-  if (!voice) return false
   synth.cancel()
-  const speech = new SpeechSynthesisUtterance(text); speech.voice = voice; speech.lang = voice.lang; speech.rate = .92; speech.pitch = 1.03
+  const speech = new SpeechSynthesisUtterance(text)
+  if (voice) speech.voice = voice
+  speech.lang = 'vi-VN'; speech.rate = .92; speech.pitch = 1.03
   synth.speak(speech)
   return true
 }
